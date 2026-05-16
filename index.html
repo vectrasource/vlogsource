@@ -262,7 +262,7 @@
 
   <div class="stats-row">
     <div class="stat">
-      <div class="stat-num">6</div>
+      <div class="stat-num">7</div>
       <div class="stat-label">AI Tools</div>
     </div>
     <div class="stat">
@@ -309,6 +309,11 @@
       <span class="tool-emoji">🎣</span>
       <span class="tool-name">Hook Writer</span>
       <span class="tool-desc">First 30 sec hook</span>
+    </button>
+    <button class="tool-btn" data-tool="calendar" onclick="selectTool(this)">
+      <span class="tool-emoji">📅</span>
+      <span class="tool-name">Content Calendar</span>
+      <span class="tool-desc">4-week content plan</span>
     </button>
   </div>
 
@@ -466,6 +471,40 @@ Each hook should be the first 30 seconds of the video. Use different styles:
 5. CONTROVERSY hook
 
 Write in natural ${lang} that feels authentic for Kerala audience. Number them 1-5.`
+  },
+  calendar: {
+    label: 'Tell me about your channel (niche, platform, posting frequency)',
+    placeholder: 'E.g. Kerala food vlog, YouTube + Instagram, post 3x a week, audience 18-35...',
+    loaderText: 'Building your 4-week content calendar...',
+    prompt: (lang, niche, input) => `You are VlogSource AI for Kerala content creators. Create a detailed 4-week content calendar in ${lang} for a ${niche} creator.
+
+Creator details: ${input}
+
+Format exactly like this:
+
+WEEK 1
+Monday: [Content type] — [Topic] — [Platform] — [Best posting time]
+Wednesday: [Content type] — [Topic] — [Platform] — [Best posting time]
+Friday: [Content type] — [Topic] — [Platform] — [Best posting time]
+Weekend: [Content type] — [Topic] — [Platform] — [Best posting time]
+
+WEEK 2
+(same format)
+
+WEEK 3
+(same format)
+
+WEEK 4
+(same format)
+
+MONTHLY STRATEGY:
+- Best days for Kerala audience engagement
+- Trending Kerala topics to include this month
+- One collab idea
+- One viral challenge idea
+
+Mix content types: YouTube Video, YouTube Short, Instagram Reel, Instagram Story, Instagram Post.
+Make all topics specific to Kerala culture, festivals, food, places and the creator niche. Write topic titles in ${lang}.`
   }
 };
 
