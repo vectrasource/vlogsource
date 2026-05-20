@@ -530,6 +530,7 @@ function resetOutput() {
 }
 
 async function generate() {
+  if (!checkPaywall()) return;
   const input = document.getElementById('userInput').value.trim();
   if (!input) { document.getElementById('userInput').focus(); return; }
 
@@ -577,6 +578,257 @@ function copyOutput() {
     setTimeout(() => btn.textContent = 'Copy', 2000);
   });
 }
+</script>
+
+<script>
+// ============================================
+// VECTRASOURCE FREEMIUM PAYWALL
+// 5 free trials then paywall
+// ============================================
+
+const PAYWALL_CONFIG = {
+  freeLimit: 5,
+  productKey: 'vlogsource',
+  productName: 'VlogSource',
+  price: '499',
+  paymentLink: 'https://rzp.io/rzp/rkJpkSIh',
+  color: '#FF3B3B',
+  emoji: '🎬'
+};
+
+function getUsageCount() {
+  return parseInt(localStorage.getItem('vs_usage_' + PAYWALL_CONFIG.productKey) || '0');
+}
+
+function incrementUsage() {
+  const count = getUsageCount() + 1;
+  localStorage.setItem('vs_usage_' + PAYWALL_CONFIG.productKey, count);
+  return count;
+}
+
+function getRemainingTrials() {
+  return Math.max(0, PAYWALL_CONFIG.freeLimit - getUsageCount());
+}
+
+function injectPaywallStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .vs-trial-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+      background: #111; border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 12px 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+      animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .vs-trial-left { display: flex; align-items: center; gap: 12px; }
+    .vs-trial-dots { display: flex; gap: 5px; }
+    .vs-trial-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+    }
+    .vs-trial-dot.used { background: #FF3B3B; }
+    .vs-trial-text { font-size: 13px; color: rgba(255,255,255,0.7); font-family: 'DM Sans', sans-serif; }
+    .vs-trial-text strong { color: white; }
+    .vs-subscribe-btn {
+      background: #FF3B3B; color: white;
+      border: none; border-radius: 30px;
+      padding: 8px 20px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      text-decoration: none; display: inline-block;
+      transition: opacity 0.2s;
+    }
+    .vs-subscribe-btn:hover { opacity: 0.85; }
+
+    /* PAYWALL MODAL */
+    .vs-modal-overlay {
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .vs-modal {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 440px; width: 100%;
+      text-align: center;
+      animation: scaleIn 0.3s ease;
+      position: relative;
+    }
+    @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .vs-modal-emoji { font-size: 48px; margin-bottom: 1rem; display: block; }
+    .vs-modal-title {
+      font-size: 24px; font-weight: 800; color: white;
+      margin-bottom: 0.5rem; font-family: 'Syne', sans-serif;
+      letter-spacing: -0.5px;
+    }
+    .vs-modal-sub {
+      font-size: 14px; color: rgba(255,255,255,0.5);
+      margin-bottom: 2rem; line-height: 1.6;
+    }
+    .vs-modal-price {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .vs-price-amount {
+      font-size: 36px; font-weight: 800; color: white;
+      font-family: 'Syne', sans-serif;
+    }
+    .vs-price-amount span { font-size: 16px; color: rgba(255,255,255,0.5); font-weight: 400; }
+    .vs-price-desc { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+    .vs-modal-features {
+      list-style: none; margin-bottom: 1.5rem; text-align: left;
+    }
+    .vs-modal-features li {
+      font-size: 13px; color: rgba(255,255,255,0.6);
+      padding: 6px 0; display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .vs-modal-features li:last-child { border-bottom: none; }
+    .vs-modal-features li::before { content: '✓'; color: #FF3B3B; font-weight: 700; }
+    .vs-modal-cta {
+      display: block; width: 100%;
+      background: #FF3B3B; color: white;
+      border: none; border-radius: 30px;
+      padding: 14px; font-size: 15px; font-weight: 700;
+      cursor: pointer; font-family: 'Syne', sans-serif;
+      text-decoration: none; text-align: center;
+      transition: opacity 0.2s; margin-bottom: 1rem;
+    }
+    .vs-modal-cta:hover { opacity: 0.85; }
+    .vs-modal-dismiss {
+      font-size: 12px; color: rgba(255,255,255,0.3);
+      cursor: pointer; background: none; border: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .vs-modal-dismiss:hover { color: rgba(255,255,255,0.6); }
+  `;
+  document.head.appendChild(style);
+}
+
+function showTrialBar() {
+  const remaining = getRemainingTrials();
+  const used = getUsageCount();
+  if (remaining <= 0) return;
+
+  const bar = document.createElement('div');
+  bar.className = 'vs-trial-bar';
+  bar.id = 'vsTrialBar';
+
+  let dots = '';
+  for (let i = 0; i < PAYWALL_CONFIG.freeLimit; i++) {
+    dots += `<div class="vs-trial-dot ${i < used ? 'used' : ''}"></div>`;
+  }
+
+  bar.innerHTML = `
+    <div class="vs-trial-left">
+      <div class="vs-trial-dots">${dots}</div>
+      <div class="vs-trial-text">
+        <strong>${remaining} free ${remaining === 1 ? 'generation' : 'generations'}</strong> remaining
+      </div>
+    </div>
+    <a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">
+      Subscribe ₹${PAYWALL_CONFIG.price}/month →
+    </a>
+  `.replace(/#FF3B3B/g, PAYWALL_CONFIG.color);
+
+  bar.style.cssText = bar.style.cssText.replace(/#FF3B3B/g, PAYWALL_CONFIG.color);
+  document.body.appendChild(bar);
+  document.body.style.paddingBottom = '60px';
+}
+
+function updateTrialBar() {
+  const bar = document.getElementById('vsTrialBar');
+  if (!bar) return;
+  const remaining = getRemainingTrials();
+  const used = getUsageCount();
+
+  let dots = '';
+  for (let i = 0; i < PAYWALL_CONFIG.freeLimit; i++) {
+    dots += `<div class="vs-trial-dot ${i < used ? 'used' : ''}"></div>`;
+  }
+
+  bar.querySelector('.vs-trial-dots').innerHTML = dots;
+  bar.querySelector('.vs-trial-text').innerHTML = `
+    <strong>${remaining} free ${remaining === 1 ? 'generation' : 'generations'}</strong> remaining
+  `;
+}
+
+function showPaywallModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'vs-modal-overlay';
+  overlay.id = 'vsModalOverlay';
+
+  overlay.innerHTML = `
+    <div class="vs-modal">
+      <span class="vs-modal-emoji">${PAYWALL_CONFIG.emoji}</span>
+      <div class="vs-modal-title">You've used all 5 free generations</div>
+      <div class="vs-modal-sub">Subscribe to ${PAYWALL_CONFIG.productName} and get unlimited access to all tools.</div>
+      <div class="vs-modal-price">
+        <div class="vs-price-amount">₹${PAYWALL_CONFIG.price}<span>/month</span></div>
+        <div class="vs-price-desc">Cancel anytime · Unlimited generations</div>
+      </div>
+      <ul class="vs-modal-features">
+        <li>Unlimited AI generations</li>
+        <li>All tools unlocked</li>
+        <li>Malayalam & English support</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-modal-cta">
+        Subscribe Now — ₹${PAYWALL_CONFIG.price}/month
+      </a>
+      <button class="vs-modal-dismiss" onclick="document.getElementById('vsModalOverlay').remove()">
+        Maybe later
+      </button>
+    </div>
+  `;
+
+  // Fix colors
+  overlay.innerHTML = overlay.innerHTML.replace(/#FF3B3B/g, PAYWALL_CONFIG.color);
+  document.body.appendChild(overlay);
+}
+
+function checkPaywall() {
+  const count = incrementUsage();
+  updateTrialBar();
+
+  if (count > PAYWALL_CONFIG.freeLimit) {
+    showPaywallModal();
+    return false; // block generation
+  }
+  return true; // allow generation
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  injectPaywallStyles();
+  if (getRemainingTrials() > 0) {
+    showTrialBar();
+  } else {
+    // Already used all trials — show bar with subscribe only
+    const bar = document.createElement('div');
+    bar.className = 'vs-trial-bar';
+    bar.innerHTML = `
+      <div class="vs-trial-text" style="color:rgba(255,255,255,0.7)">
+        <strong style="color:white">Free trial ended.</strong> Subscribe to continue using ${PAYWALL_CONFIG.productName}
+      </div>
+      <a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">
+        Subscribe ₹${PAYWALL_CONFIG.price}/month →
+      </a>
+    `;
+    document.body.appendChild(bar);
+    document.body.style.paddingBottom = '60px';
+  }
+});
+
 </script>
 </body>
 </html>
