@@ -1070,8 +1070,8 @@ const PAYWALL_CONFIG = {
   freeLimit: 5,
   productKey: 'vlogsource',
   productName: 'VlogSource',
-  price: '499',
-  paymentLink: 'https://rzp.io/rzp/rkJpkSIh',
+  price: '269',
+  paymentLink: 'https://rzp.io/rzp/4wDSwve',
   color: '#FF3B3B',
   emoji: '🎬'
 };
@@ -1130,7 +1130,7 @@ function showTrialBar() {
       <div class="vs-trial-dots">${dots}</div>
       <div class="vs-trial-text"><strong>${remaining} free ${remaining === 1 ? 'generation' : 'generations'}</strong> remaining</div>
     </div>
-    <a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a>
+    <div style="display:flex;gap:8px;align-items:center"><button onclick="showTokenInput()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap;">I have a token</button><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a></div>
   `;
   document.body.appendChild(bar);
   document.body.style.paddingBottom = '60px';
@@ -1142,7 +1142,7 @@ function showEndedBar() {
   bar.className = 'vs-trial-bar'; bar.id = 'vsTrialBar';
   bar.innerHTML = `
     <div class="vs-trial-text" style="color:rgba(255,255,255,0.7)"><strong style="color:white">Free trial ended.</strong> Subscribe to continue using ${PAYWALL_CONFIG.productName}</div>
-    <a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a>
+    <div style="display:flex;gap:8px;align-items:center"><button onclick="showTokenInput()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap;">I have a token</button><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a></div>
   `;
   document.body.appendChild(bar);
   document.body.style.paddingBottom = '60px';
@@ -1181,41 +1181,106 @@ function showPaywallModal() {
         <li>Priority support</li>
       </ul>
       <a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-modal-cta">Subscribe Now — ₹${PAYWALL_CONFIG.price}/month</a>
-      <button class="vs-modal-dismiss" onclick="document.getElementById('vsModalOverlay').remove()">Maybe later</button>
+      <a href="https://rzp.io/rzp/12AHqoAX" target="_blank" style="display:block;text-align:center;font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;text-decoration:underline">Or get Suite Pro (all tools) — ₹699/month</a><button onclick="showTokenInput()" style="display:block;width:100%;margin-top:8px;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);border-radius:30px;padding:10px;font-size:13px;cursor:pointer;font-family:DM Sans,sans-serif;">I already have a token →</button><button class="vs-modal-dismiss" onclick="document.getElementById('vsModalOverlay').remove()">Maybe later</button>
     </div>
   `;
   document.body.appendChild(overlay);
 }
 
-// FIX: check BEFORE incrementing
-function checkPaywall() {
-  const current = getUsageCount();
-  if (current >= PAYWALL_CONFIG.freeLimit) {
-    showPaywallModal();
-    return false;
-  }
-  incrementUsage();
-  updateTrialBar();
-  return true;
+
+// ============================================
+// REAL TOKEN-BASED PAYWALL
+// ============================================
+const AUTH_API = 'https://vectrasource-auth.vercel.app';
+
+function getToken() { return localStorage.getItem('vs_token_' + PAYWALL_CONFIG.productKey); }
+function saveToken(t) { localStorage.setItem('vs_token_' + PAYWALL_CONFIG.productKey, t); }
+function clearToken() { localStorage.removeItem('vs_token_' + PAYWALL_CONFIG.productKey); }
+
+async function verifyToken(token) {
+  try {
+    const res = await fetch(AUTH_API + '/api/verify', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, product: PAYWALL_CONFIG.productKey })
+    });
+    return await res.json();
+  } catch(e) { return { valid: false, error: 'Network error' }; }
 }
 
-// ============================================
-// INIT
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
+async function checkPaywall() {
+  const saved = getToken();
+  if (saved) {
+    const r = await verifyToken(saved);
+    if (r.valid) { showSubscribedBar(r); return true; }
+    clearToken();
+    if (r.error === 'Subscription expired') { showExpiredModal(); return false; }
+  }
+  const current = getUsageCount();
+  if (current >= PAYWALL_CONFIG.freeLimit) { showPaywallModal(); return false; }
+  incrementUsage(); updateTrialBar(); return true;
+}
+
+function showSubscribedBar(r) {
+  const existing = document.getElementById('vsTrialBar');
+  if (existing) existing.remove();
+  const bar = document.createElement('div');
+  bar.className = 'vs-trial-bar'; bar.id = 'vsTrialBar';
+  bar.style.cssText = 'background:#071a0a;border-top:1px solid rgba(74,222,128,0.2)';
+  const expiry = new Date(r.validUntil).toLocaleDateString('en-IN');
+  bar.innerHTML = `<div class="vs-trial-text"><strong style="color:#4ade80">✓ ${r.planName} Active</strong><span style="color:rgba(255,255,255,0.4);margin-left:8px;font-size:12px">Valid until ${expiry}</span></div><span style="font-size:11px;color:rgba(255,255,255,0.3)">${r.email}</span>`;
+  document.body.appendChild(bar); document.body.style.paddingBottom = '60px';
+}
+
+function showTokenInput() {
+  if (document.getElementById('vsTokenOverlay')) return;
+  const o = document.createElement('div'); o.className = 'vs-modal-overlay'; o.id = 'vsTokenOverlay';
+  o.innerHTML = `<div class="vs-modal"><span class="vs-modal-emoji">🔑</span><div class="vs-modal-title">Enter Your Access Token</div><div class="vs-modal-sub">Paste the token from your subscription email.</div><input type="text" id="vsTokenInput" placeholder="vs_..." style="width:100%;padding:12px 14px;border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.05);color:white;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:12px;"/><div id="vsTokenError" style="font-size:12px;color:#e05555;margin-bottom:12px;display:none;"></div><button onclick="submitToken()" class="vs-modal-cta" id="vsTokenBtn">Verify Token</button><div style="margin-top:12px"><span style="font-size:12px;color:rgba(255,255,255,0.3)">No token? </span><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" style="font-size:12px;color:${PAYWALL_CONFIG.color};text-decoration:underline">Subscribe here →</a></div><button class="vs-modal-dismiss" onclick="document.getElementById('vsTokenOverlay').remove()">Cancel</button></div>`;
+  document.body.appendChild(o);
+  setTimeout(() => document.getElementById('vsTokenInput')?.focus(), 100);
+}
+
+async function submitToken() {
+  const input = document.getElementById('vsTokenInput');
+  const btn = document.getElementById('vsTokenBtn');
+  const errEl = document.getElementById('vsTokenError');
+  const token = input?.value.trim();
+  if (!token) { errEl.textContent='Please enter your token.'; errEl.style.display='block'; return; }
+  btn.textContent='Verifying...'; btn.style.opacity='0.7'; errEl.style.display='none';
+  const r = await verifyToken(token);
+  if (r.valid) {
+    saveToken(token);
+    document.getElementById('vsTokenOverlay')?.remove();
+    document.getElementById('vsModalOverlay')?.remove();
+    showSubscribedBar(r);
+    const s = document.createElement('div');
+    s.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#071a0a;border:1px solid #4ade80;color:#4ade80;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;z-index:99999;font-family:DM Sans,sans-serif';
+    s.textContent='✓ Token verified! Unlimited access unlocked.';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),3000);
+  } else {
+    errEl.textContent = r.error==='Subscription expired' ? 'Token expired. Please renew.' : 'Invalid token. Check your email and try again.';
+    errEl.style.display='block'; btn.textContent='Verify Token'; btn.style.opacity='1';
+  }
+}
+
+function showExpiredModal() {
+  if (document.getElementById('vsModalOverlay')) return;
+  const o = document.createElement('div'); o.className='vs-modal-overlay'; o.id='vsModalOverlay';
+  o.innerHTML=`<div class="vs-modal"><span class="vs-modal-emoji">⏰</span><div class="vs-modal-title">Subscription Expired</div><div class="vs-modal-sub">Your ${PAYWALL_CONFIG.productName} subscription has expired.</div><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-modal-cta">Renew — ₹${PAYWALL_CONFIG.price}/month</a><button onclick="showTokenInput()" style="display:block;width:100%;margin-top:8px;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);border-radius:30px;padding:10px;font-size:13px;cursor:pointer;font-family:DM Sans,sans-serif;">I already have a token →</button><button class="vs-modal-dismiss" onclick="document.getElementById('vsModalOverlay').remove()">Maybe later</button></div>`;
+  document.body.appendChild(o);
+}
+
+
+document.addEventListener('DOMContentLoaded', async () => {
   injectPaywallStyles();
-  showTrialBar();
   renderHistory();
-
-  // Load saved channel name
-  const saved = getChannelName();
-  if (saved) document.getElementById('channelNameInput').value = saved;
-
-  // Enter key saves channel name
-  document.getElementById('channelNameInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') saveChannelName();
-  });
+  const saved = getToken();
+  if (saved) {
+    const r = await verifyToken(saved);
+    if (r.valid) { showSubscribedBar(r); }
+    else { clearToken(); showTrialBar(); }
+  } else { showTrialBar(); }
 });
+
 </script>
 </body>
 </html>
