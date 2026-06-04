@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const { fullPrompt } = req.body;
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ error: { message: 'OPENROUTER_API_KEY not set in Vercel environment variables.' } });
+      return res.status(500).json({ error: { message: 'OPENROUTER_API_KEY not set.' } });
     }
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         'X-Title': 'Vectrasource AI Suite'
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.0-flash-001',
+        model: 'anthropic/claude-haiku-4-5',
         messages: [{ role: 'user', content: fullPrompt }],
         max_tokens: 4000,
         temperature: 0.4
