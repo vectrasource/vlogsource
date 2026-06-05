@@ -292,6 +292,24 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .trends-error { background: #FFF0F0; border: 1.5px solid rgba(255,59,59,0.2); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; color: var(--red); font-size: 14px; }
 .trends-error button { margin-top: 10px; background: var(--red); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
+/* NICHE FILTER BAR */
+.niche-filter {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.niche-btn {
+  padding: 7px 14px; border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--white); color: var(--ink-mid);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s; white-space: nowrap;
+}
+.niche-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+.niche-btn.active { background: var(--red); color: white; border-color: var(--red); box-shadow: 0 4px 12px rgba(255,59,59,0.2); }
+
 footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--ink-light); border-top: 1px solid var(--border); margin-top: 2rem; }
 footer strong { color: var(--red); font-family: 'Syne', sans-serif; }
 </style>
@@ -490,6 +508,19 @@ footer strong { color: var(--red); font-family: 'Syne', sans-serif; }
 
   <!-- ===== TRENDS SECTION ===== -->
   <div id="trendsSection">
+
+    <!-- NICHE FILTER BAR -->
+    <div class="niche-filter" id="nicheFilter">
+      <button class="niche-btn active" data-niche="all" onclick="filterTrends(this)">🔥 All</button>
+      <button class="niche-btn" data-niche="vlog" onclick="filterTrends(this)">🎥 Vlog</button>
+      <button class="niche-btn" data-niche="food" onclick="filterTrends(this)">🍛 Food</button>
+      <button class="niche-btn" data-niche="travel" onclick="filterTrends(this)">✈️ Travel</button>
+      <button class="niche-btn" data-niche="tech" onclick="filterTrends(this)">📱 Tech</button>
+      <button class="niche-btn" data-niche="comedy" onclick="filterTrends(this)">😂 Comedy</button>
+      <button class="niche-btn" data-niche="fitness" onclick="filterTrends(this)">💪 Fitness</button>
+      <button class="niche-btn" data-niche="lifestyle" onclick="filterTrends(this)">✨ Lifestyle</button>
+      <button class="niche-btn" data-niche="business" onclick="filterTrends(this)">💰 Business</button>
+    </div>
 
     <div class="insight-banner" id="insightBanner" style="display:none">
       <span class="insight-icon">🔥</span>
@@ -748,8 +779,13 @@ function switchMode(mode) {
 // ============================================
 // TRENDS
 // ============================================
-async function loadTrends() {
+let currentNiche = 'all';
+
+async function loadTrends(niche = 'all') {
+  currentNiche = niche;
   trendsLoaded = true;
+
+  // Show skeleton
   document.getElementById('trendsSkeleton').style.display = 'block';
   document.getElementById('trendsError').style.display = 'none';
   document.getElementById('trendsGrid').innerHTML = '';
@@ -757,20 +793,24 @@ async function loadTrends() {
   document.getElementById('trendsMeta').style.display = 'none';
   document.getElementById('trendsUpdated').style.display = 'none';
   document.getElementById('trendsGridHeader').style.display = 'none';
+
   try {
-    const res = await fetch('/api/trends');
+    const res = await fetch(`/api/trends?niche=${niche}`);
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
+
     document.getElementById('trendsSkeleton').style.display = 'none';
     document.getElementById('insightText').textContent = data.insight || 'Malayalam creators are growing fast this week.';
     document.getElementById('insightBanner').style.display = 'flex';
     document.getElementById('categoriesList').innerHTML = (data.categories||[]).map(c=>`<span class="tag">${c}</span>`).join('');
     document.getElementById('patternsList').innerHTML = (data.patterns||[]).map(p=>`<span class="tag pattern">${p}</span>`).join('');
     document.getElementById('trendsMeta').style.display = 'grid';
+
     if (data.updatedAt) {
       document.getElementById('updatedTime').textContent = new Date(data.updatedAt).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       document.getElementById('trendsUpdated').style.display = 'flex';
     }
+
     if (data.videos && data.videos.length > 0) {
       document.getElementById('trendsGridHeader').style.display = 'block';
       document.getElementById('trendsGrid').innerHTML = data.videos.map(v=>`
@@ -785,11 +825,24 @@ async function loadTrends() {
             </div>
           </div>
         </div>`).join('');
+    } else {
+      document.getElementById('trendsGridHeader').style.display = 'block';
+      document.getElementById('trendsGrid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--ink-light);font-size:14px">No trending videos found for this niche this week. Try another category.</div>`;
     }
   } catch(err) {
     document.getElementById('trendsSkeleton').style.display = 'none';
     document.getElementById('trendsError').style.display = 'block';
   }
+}
+
+function filterTrends(btn) {
+  // Update active button
+  document.querySelectorAll('.niche-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const niche = btn.dataset.niche;
+  // Reset trendsLoaded so it always re-fetches on filter change
+  trendsLoaded = false;
+  loadTrends(niche);
 }
 
 function createWithTrend(encodedTitle) {
