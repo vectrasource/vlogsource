@@ -9,10 +9,11 @@ const RAZORPAY_KEY = 'rzp_live_SxsAgSqIpmxqs2'; // ← replace with your actual 
 // Map product → Razorpay Plan ID
 // Get these from Razorpay Dashboard → Subscriptions → Plans
 const PLAN_IDS = {
-  'vlogsource': 'plan_SxrzUFchScm8fi', // ← replace after creating plan
-  'tutorai':    'plan_xxxxxxxxxxxxxxxx',
-  'vakeel':     'plan_xxxxxxxxxxxxxxxx',
-  'suite':      'plan_xxxxxxxxxxxxxxxx',
+  'vlogsource': 'plan_SxrzUFchScm8fi',
+  'tutorai':    'plan_SxvgSKYt8hoGPW',
+  'vakeel':     'plan_SxvdqdKzVzNYTx',
+  'taxdraftai': 'plan_SxvfSnGF6UgYpZ',
+  'suite':      'plan_SxvxIMnI5krctx',
 };
 
 const PLAN_AMOUNTS = {
