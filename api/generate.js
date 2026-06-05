@@ -17,11 +17,11 @@ export default async function handler(req, res) {
         'X-Title': 'Vectrasource AI Suite'
       },
       body: JSON.stringify({
-  model: 'anthropic/claude-haiku-4-5',
-  messages: [{ role: 'user', content: fullPrompt }],
-  max_tokens: 2500,  // ← change from 4000 to 2500
-  temperature: 0.4
-})
+        model: 'anthropic/claude-haiku-4-5',
+        messages: [{ role: 'user', content: fullPrompt }],
+        max_tokens: 4000,
+        temperature: 0.4
+      })
     });
     const data = await response.json();
     if (data.error) {
