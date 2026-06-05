@@ -91,6 +91,21 @@ h1 .hl { background: var(--yellow); padding: 0 6px; border-radius: 4px; }
 /* APP */
 .app-container { max-width: 720px; margin: 0 auto; padding: 0 1.5rem 5rem; }
 
+/* MODE TABS */
+.mode-tabs {
+  display: flex; gap: 8px; margin-bottom: 1.5rem;
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg); padding: 6px;
+}
+.mode-tab {
+  flex: 1; padding: 10px; border: none; border-radius: 10px;
+  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; background: transparent; color: var(--ink-light);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.mode-tab.active { background: var(--red); color: white; box-shadow: 0 4px 12px rgba(255,59,59,0.25); }
+.mode-tab:not(.active):hover { background: var(--red-light); color: var(--red); }
+
 /* TOOL GRID */
 .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.5rem; }
 @media (min-width: 560px) { .tool-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -125,13 +140,10 @@ select, textarea, input[type="text"], input[type="number"] {
 select:focus, textarea:focus, input:focus { border-color: var(--red); }
 textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 
-/* SMART FIELDS */
 .smart-fields { margin-bottom: 14px; }
 .smart-fields.hidden { display: none; }
 .form-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; color: var(--ink-light); font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
 .form-divider::before, .form-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-/* MANGLISH HIGHLIGHT */
 .lang-manglish-note { font-size: 11px; color: var(--ink-light); margin-top: 4px; display: none; }
 .lang-manglish-note.visible { display: block; }
 
@@ -161,11 +173,8 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .action-btn.whatsapp:hover { background: var(--green-light); }
 .action-btn.pdf { color: var(--purple); border-color: var(--purple); }
 .action-btn.pdf:hover { background: var(--purple-light); }
-
 .output-body { padding: 1.5rem; min-height: 160px; }
 .output-placeholder { font-size: 14px; color: var(--ink-light); font-style: italic; line-height: 1.7; }
-
-/* Markdown output */
 .output-md { font-size: 13px; color: var(--ink); line-height: 1.9; }
 .output-md h1, .output-md h2, .output-md h3 { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--ink); margin: 1.2em 0 0.5em; }
 .output-md h1 { font-size: 18px; border-bottom: 2px solid var(--red-light); padding-bottom: 6px; }
@@ -215,7 +224,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .history-item-meta { font-size: 11px; color: var(--ink-light); margin-top: 2px; }
 .history-item-arrow { font-size: 14px; color: var(--ink-light); flex-shrink: 0; }
 
-/* PDF hidden area */
+/* PDF */
 #pdfContent { display: none; font-family: 'DM Sans', sans-serif; font-size: 13px; line-height: 1.8; color: #0D0D0D; padding: 20px; }
 #pdfContent h1, #pdfContent h2, #pdfContent h3 { font-family: 'Syne', sans-serif; font-weight: 700; margin: 1em 0 0.4em; }
 #pdfContent h1 { font-size: 18px; border-bottom: 2px solid #FF3B3B; padding-bottom: 6px; }
@@ -226,6 +235,62 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 #pdfContent .pdf-header { border-bottom: 2px solid #FF3B3B; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-start; }
 #pdfContent .pdf-brand { font-family: 'Syne', sans-serif; font-weight: 800; color: #FF3B3B; font-size: 16px; }
 #pdfContent .pdf-meta { font-size: 11px; color: #888; text-align: right; }
+
+/* ================================
+   TRENDS SECTION
+================================ */
+#trendsSection { display: none; }
+
+.insight-banner {
+  background: var(--ink); color: white; border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 1rem; animation: fadeInUp 0.4s ease;
+}
+.insight-banner .insight-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.insight-banner p { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+
+.trends-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+@media (max-width: 500px) { .trends-meta { grid-template-columns: 1fr; } }
+.trends-meta-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+.trends-meta-card h4 { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 20px; background: var(--red-light); color: var(--red); border: 1px solid rgba(255,59,59,0.15); }
+.tag.pattern { background: #FFF8E1; color: #B8860B; border-color: rgba(255,214,0,0.3); }
+
+.trends-updated { font-size: 11px; color: var(--ink-light); margin-bottom: 1rem; display: flex; align-items: center; gap: 5px; }
+.trends-updated::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; display: inline-block; }
+.trends-header { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink-mid); letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 10px; }
+
+.trends-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+@media (min-width: 500px) { .trends-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.trend-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.15s; animation: fadeInUp 0.4s ease; }
+.trend-card:hover { border-color: var(--red); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,59,59,0.1); }
+.trend-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #eee; }
+.trend-info { padding: 12px; }
+.trend-title { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.trend-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.trend-channel { font-size: 11px; color: var(--ink-light); }
+.trend-views { font-size: 11px; font-weight: 700; color: var(--red); font-family: 'Syne', sans-serif; }
+.trend-actions { display: flex; gap: 6px; }
+.btn-watch { flex: 1; font-size: 12px; font-weight: 600; padding: 7px 10px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface); color: var(--ink-mid); text-decoration: none; text-align: center; transition: all 0.15s; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+.btn-watch:hover { border-color: var(--ink-mid); }
+.btn-create { flex: 2; font-size: 12px; font-weight: 700; padding: 7px 10px; border-radius: 8px; border: none; background: var(--red); color: white; cursor: pointer; font-family: 'Syne', sans-serif; transition: background 0.15s; text-align: center; }
+.btn-create:hover { background: var(--red-dark); }
+
+/* Skeleton */
+.trends-skeleton { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 500px) { .trends-skeleton { grid-template-columns: 1fr; } }
+.skeleton-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.skeleton-thumb { width: 100%; aspect-ratio: 16/9; background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+.skeleton-body { padding: 12px; }
+.skeleton-line { height: 12px; border-radius: 6px; margin-bottom: 8px; background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+.skeleton-line.short { width: 60%; }
+.skeleton-line.shorter { width: 40%; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.trends-error { background: #FFF0F0; border: 1.5px solid rgba(255,59,59,0.2); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; color: var(--red); font-size: 14px; }
+.trends-error button { margin-top: 10px; background: var(--red); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
 footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--ink-light); border-top: 1px solid var(--border); margin-top: 2rem; }
 footer strong { color: var(--red); font-family: 'Syne', sans-serif; }
@@ -243,7 +308,6 @@ footer strong { color: var(--red); font-family: 'Syne', sans-serif; }
   </div>
 </nav>
 
-<!-- CHANNEL NAME PERSONALISATION -->
 <div class="channel-banner">
   <span class="channel-banner-label">📺 Your channel name:</span>
   <input type="text" id="channelNameInput" placeholder="e.g. Kozhikode Diaries" maxlength="40" />
@@ -265,285 +329,203 @@ footer strong { color: var(--red); font-family: 'Syne', sans-serif; }
 
 <div class="app-container">
 
-  <!-- TOOL GRID -->
-  <div class="tool-grid" id="toolGrid">
-    <button class="tool-btn active" data-tool="script" onclick="selectTool(this)">
-      <span class="tool-emoji">🎬</span>
-      <span class="tool-name">Video Script</span>
-      <span class="tool-desc">Full YouTube script</span>
-    </button>
-    <button class="tool-btn" data-tool="hook" onclick="selectTool(this)">
-      <span class="tool-emoji">🎣</span>
-      <span class="tool-name">Hook Writer</span>
-      <span class="tool-desc">First 30 sec hook</span>
-      <span class="tool-badge">🔥 Popular</span>
-    </button>
-    <button class="tool-btn" data-tool="reel" onclick="selectTool(this)">
-      <span class="tool-emoji">📱</span>
-      <span class="tool-name">Reel Script</span>
-      <span class="tool-desc">30/60 sec reels</span>
-    </button>
-    <button class="tool-btn" data-tool="title" onclick="selectTool(this)">
-      <span class="tool-emoji">🔥</span>
-      <span class="tool-name">Title Generator</span>
-      <span class="tool-desc">Viral YouTube titles</span>
-    </button>
-    <button class="tool-btn" data-tool="caption" onclick="selectTool(this)">
-      <span class="tool-emoji">✍️</span>
-      <span class="tool-name">Caption + Tags</span>
-      <span class="tool-desc">Instagram captions</span>
-    </button>
-    <button class="tool-btn" data-tool="ideas" onclick="selectTool(this)">
-      <span class="tool-emoji">💡</span>
-      <span class="tool-name">Content Ideas</span>
-      <span class="tool-desc">Weekly video ideas</span>
-    </button>
-    <button class="tool-btn" data-tool="calendar" onclick="selectTool(this)">
-      <span class="tool-emoji">📅</span>
-      <span class="tool-name">Content Calendar</span>
-      <span class="tool-desc">4-week content plan</span>
-    </button>
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tabTools" onclick="switchMode('tools')">✦ AI Tools</button>
+    <button class="mode-tab" id="tabTrends" onclick="switchMode('trends')">🔥 Trending Now</button>
   </div>
 
-  <!-- FORM -->
-  <div class="form-card">
-    <div class="form-grid">
-      <div>
-        <label for="langSelect">Output language</label>
-        <select id="langSelect" onchange="onLangChange()">
-          <option value="Malayalam">Malayalam (മലയാളം)</option>
-          <option value="Manglish">Manglish 🔥 (Malayalam in English script)</option>
-          <option value="English">English</option>
-          <option value="bilingual Malayalam and English">Bilingual (ML + EN)</option>
-        </select>
-        <div class="lang-manglish-note" id="manglishNote">✨ Manglish is how Kerala creators actually talk — great for reels & captions!</div>
-      </div>
-      <div>
-        <label for="nicheSelect">Your niche</label>
-        <select id="nicheSelect">
-          <option value="general Malayalam YouTube vlog">General / Vlog</option>
-          <option value="Kerala food and cooking">Food & Cooking 🍛</option>
-          <option value="Kerala travel and places">Travel & Places ✈️</option>
-          <option value="Malayalam tech reviews">Tech & Gadgets 📱</option>
-          <option value="Kerala fitness and health">Fitness & Health 💪</option>
-          <option value="Malayalam comedy and entertainment">Comedy & Entertainment 😂</option>
-          <option value="Kerala business and finance">Business & Finance 💰</option>
-          <option value="Kerala education">Education 📚</option>
-          <option value="AI and tech Malayalam">AI & Tech 🤖</option>
-        </select>
-      </div>
+  <!-- ===== TOOLS SECTION ===== -->
+  <div id="toolsSection">
+
+    <div class="tool-grid" id="toolGrid">
+      <button class="tool-btn active" data-tool="script" onclick="selectTool(this)">
+        <span class="tool-emoji">🎬</span><span class="tool-name">Video Script</span><span class="tool-desc">Full YouTube script</span>
+      </button>
+      <button class="tool-btn" data-tool="hook" onclick="selectTool(this)">
+        <span class="tool-emoji">🎣</span><span class="tool-name">Hook Writer</span><span class="tool-desc">First 30 sec hook</span><span class="tool-badge">🔥 Popular</span>
+      </button>
+      <button class="tool-btn" data-tool="reel" onclick="selectTool(this)">
+        <span class="tool-emoji">📱</span><span class="tool-name">Reel Script</span><span class="tool-desc">30/60 sec reels</span>
+      </button>
+      <button class="tool-btn" data-tool="title" onclick="selectTool(this)">
+        <span class="tool-emoji">🔥</span><span class="tool-name">Title Generator</span><span class="tool-desc">Viral YouTube titles</span>
+      </button>
+      <button class="tool-btn" data-tool="caption" onclick="selectTool(this)">
+        <span class="tool-emoji">✍️</span><span class="tool-name">Caption + Tags</span><span class="tool-desc">Instagram captions</span>
+      </button>
+      <button class="tool-btn" data-tool="ideas" onclick="selectTool(this)">
+        <span class="tool-emoji">💡</span><span class="tool-name">Content Ideas</span><span class="tool-desc">Weekly video ideas</span>
+      </button>
+      <button class="tool-btn" data-tool="calendar" onclick="selectTool(this)">
+        <span class="tool-emoji">📅</span><span class="tool-name">Content Calendar</span><span class="tool-desc">4-week content plan</span>
+      </button>
     </div>
 
-    <!-- SMART FIELDS: Video Script -->
-    <div class="smart-fields" id="fields-script">
-      <div class="form-divider">Script Settings</div>
-      <div class="form-grid-3">
-        <div>
-          <label for="sc-topic">Video Topic</label>
-          <input type="text" id="sc-topic" placeholder="e.g. Best street food in Kozhikode" />
-        </div>
-        <div>
-          <label for="sc-duration">Video Length</label>
-          <select id="sc-duration">
-            <option value="5 minute">5 minutes</option>
-            <option value="8-10 minute" selected>8-10 minutes</option>
-            <option value="15 minute">15 minutes</option>
-            <option value="20+ minute">20+ minutes</option>
-          </select>
-        </div>
-        <div>
-          <label for="sc-tone">Tone / Style</label>
-          <select id="sc-tone">
-            <option value="funny and entertaining">Funny & Entertaining</option>
-            <option value="informative and educational" selected>Informative</option>
-            <option value="emotional and personal">Emotional & Personal</option>
-            <option value="energetic and hype">Energetic & Hype</option>
-            <option value="calm and storytelling">Calm Storytelling</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <label for="sc-extra">Any specific points to cover?</label>
-        <textarea id="sc-extra" placeholder="e.g. Cover 5 spots, include prices, end with a recommendation..." style="min-height:60px"></textarea>
-      </div>
-    </div>
-
-    <!-- SMART FIELDS: Hook Writer -->
-    <div class="smart-fields hidden" id="fields-hook">
-      <div class="form-divider">Hook Settings</div>
+    <div class="form-card">
       <div class="form-grid">
         <div>
-          <label for="hk-topic">Video Topic</label>
-          <input type="text" id="hk-topic" placeholder="e.g. How I grew to 10K subscribers" />
+          <label for="langSelect">Output language</label>
+          <select id="langSelect" onchange="onLangChange()">
+            <option value="Malayalam">Malayalam (മലയാളം)</option>
+            <option value="Manglish">Manglish 🔥 (Malayalam in English script)</option>
+            <option value="English">English</option>
+            <option value="bilingual Malayalam and English">Bilingual (ML + EN)</option>
+          </select>
+          <div class="lang-manglish-note" id="manglishNote">✨ Manglish is how Kerala creators actually talk — great for reels & captions!</div>
         </div>
         <div>
-          <label for="hk-count">Number of Hooks</label>
-          <select id="hk-count">
-            <option value="3">3 hooks</option>
-            <option value="5" selected>5 hooks</option>
-            <option value="7">7 hooks</option>
+          <label for="nicheSelect">Your niche</label>
+          <select id="nicheSelect">
+            <option value="general Malayalam YouTube vlog">General / Vlog</option>
+            <option value="Kerala food and cooking">Food & Cooking 🍛</option>
+            <option value="Kerala travel and places">Travel & Places ✈️</option>
+            <option value="Malayalam tech reviews">Tech & Gadgets 📱</option>
+            <option value="Kerala fitness and health">Fitness & Health 💪</option>
+            <option value="Malayalam comedy and entertainment">Comedy & Entertainment 😂</option>
+            <option value="Kerala business and finance">Business & Finance 💰</option>
+            <option value="Kerala education">Education 📚</option>
+            <option value="AI and tech Malayalam">AI & Tech 🤖</option>
           </select>
         </div>
       </div>
+
+      <div class="smart-fields" id="fields-script">
+        <div class="form-divider">Script Settings</div>
+        <div class="form-grid-3">
+          <div><label for="sc-topic">Video Topic</label><input type="text" id="sc-topic" placeholder="e.g. Best street food in Kozhikode" /></div>
+          <div><label for="sc-duration">Video Length</label><select id="sc-duration"><option value="5 minute">5 minutes</option><option value="8-10 minute" selected>8-10 minutes</option><option value="15 minute">15 minutes</option><option value="20+ minute">20+ minutes</option></select></div>
+          <div><label for="sc-tone">Tone / Style</label><select id="sc-tone"><option value="funny and entertaining">Funny & Entertaining</option><option value="informative and educational" selected>Informative</option><option value="emotional and personal">Emotional & Personal</option><option value="energetic and hype">Energetic & Hype</option><option value="calm and storytelling">Calm Storytelling</option></select></div>
+        </div>
+        <div class="form-row"><label for="sc-extra">Any specific points to cover?</label><textarea id="sc-extra" placeholder="e.g. Cover 5 spots, include prices, end with a recommendation..." style="min-height:60px"></textarea></div>
+      </div>
+
+      <div class="smart-fields hidden" id="fields-hook">
+        <div class="form-divider">Hook Settings</div>
+        <div class="form-grid">
+          <div><label for="hk-topic">Video Topic</label><input type="text" id="hk-topic" placeholder="e.g. How I grew to 10K subscribers" /></div>
+          <div><label for="hk-count">Number of Hooks</label><select id="hk-count"><option value="3">3 hooks</option><option value="5" selected>5 hooks</option><option value="7">7 hooks</option></select></div>
+        </div>
+      </div>
+
+      <div class="smart-fields hidden" id="fields-reel">
+        <div class="form-divider">Reel Settings</div>
+        <div class="form-grid-3">
+          <div><label for="rl-topic">Reel Topic</label><input type="text" id="rl-topic" placeholder="e.g. 5 tips for growing on Instagram" /></div>
+          <div><label for="rl-duration">Duration</label><select id="rl-duration"><option value="15 second">15 seconds</option><option value="30 second" selected>30 seconds</option><option value="60 second">60 seconds</option><option value="90 second">90 seconds</option></select></div>
+          <div><label for="rl-hook">Hook Style</label><select id="rl-hook"><option value="shocking statement">Shocking Statement</option><option value="question">Question</option><option value="story" selected>Story</option><option value="controversial opinion">Controversial Opinion</option></select></div>
+        </div>
+      </div>
+
+      <div class="smart-fields hidden" id="fields-title">
+        <div class="form-divider">Title Settings</div>
+        <div class="form-grid">
+          <div><label for="tl-topic">Video Topic</label><input type="text" id="tl-topic" placeholder="e.g. I tried every biryani in Kozhikode" /></div>
+          <div><label for="tl-count">Number of Titles</label><select id="tl-count"><option value="5">5 titles</option><option value="10" selected>10 titles</option><option value="15">15 titles</option></select></div>
+        </div>
+      </div>
+
+      <div class="smart-fields hidden" id="fields-caption">
+        <div class="form-divider">Caption Settings</div>
+        <div class="form-grid">
+          <div><label for="cp-topic">Post / Video Description</label><input type="text" id="cp-topic" placeholder="e.g. Trip to Munnar waterfalls reel" /></div>
+          <div><label for="cp-style">Caption Style</label><select id="cp-style"><option value="engaging and conversational" selected>Engaging & Conversational</option><option value="funny and witty">Funny & Witty</option><option value="inspirational">Inspirational</option><option value="informative">Informative</option></select></div>
+        </div>
+      </div>
+
+      <div class="smart-fields hidden" id="fields-ideas">
+        <div class="form-divider">Channel Details</div>
+        <div class="form-grid">
+          <div><label for="id-subs">Subscriber Count</label><select id="id-subs"><option value="new (under 1K subscribers)">New (under 1K)</option><option value="growing (1K-10K subscribers)" selected>Growing (1K-10K)</option><option value="established (10K-100K subscribers)">Established (10K-100K)</option><option value="large (100K+ subscribers)">Large (100K+)</option></select></div>
+          <div><label for="id-audience">Target Audience</label><input type="text" id="id-audience" placeholder="e.g. 18-30 year olds in Kerala" /></div>
+        </div>
+        <div class="form-row"><label for="id-extra">Any specific theme or upcoming event?</label><input type="text" id="id-extra" placeholder="e.g. Onam season, want to try trending formats" /></div>
+      </div>
+
+      <div class="smart-fields hidden" id="fields-calendar">
+        <div class="form-divider">Calendar Settings</div>
+        <div class="form-grid-3">
+          <div><label for="cal-freq">Posting Frequency</label><select id="cal-freq"><option value="1 video per week">1x per week</option><option value="2 videos per week">2x per week</option><option value="3 videos per week" selected>3x per week</option><option value="daily">Daily</option></select></div>
+          <div><label for="cal-platform">Platform</label><select id="cal-platform"><option value="YouTube only">YouTube only</option><option value="Instagram only">Instagram only</option><option value="YouTube + Instagram" selected>YouTube + Instagram</option><option value="YouTube + Instagram + Facebook">All platforms</option></select></div>
+          <div><label for="cal-month">Month / Season</label><input type="text" id="cal-month" placeholder="e.g. June 2026, Onam season" /></div>
+        </div>
+      </div>
+
+      <button class="gen-btn" id="genBtn" onclick="generate()">✦ Generate Content</button>
     </div>
 
-    <!-- SMART FIELDS: Reel Script -->
-    <div class="smart-fields hidden" id="fields-reel">
-      <div class="form-divider">Reel Settings</div>
-      <div class="form-grid-3">
-        <div>
-          <label for="rl-topic">Reel Topic</label>
-          <input type="text" id="rl-topic" placeholder="e.g. 5 tips for growing on Instagram" />
+    <div class="output-card">
+      <div class="output-topbar">
+        <div class="output-label">✦ AI OUTPUT</div>
+        <div class="output-actions" id="outputActions" style="display:none">
+          <button class="action-btn" id="copyBtn" onclick="copyOutput()">📋 Copy</button>
+          <button class="action-btn pdf" onclick="downloadPDF()">⬇ PDF</button>
+          <a class="action-btn whatsapp" id="waBtn" href="#" target="_blank">💬 WhatsApp</a>
         </div>
-        <div>
-          <label for="rl-duration">Duration</label>
-          <select id="rl-duration">
-            <option value="15 second">15 seconds</option>
-            <option value="30 second" selected>30 seconds</option>
-            <option value="60 second">60 seconds</option>
-            <option value="90 second">90 seconds</option>
-          </select>
+      </div>
+      <div class="output-body">
+        <div class="loader" id="loaderEl" style="display:none">
+          <div class="loader-dots"><span></span><span></span><span></span></div>
+          <span class="loader-text" id="loaderText">Writing your content...</span>
         </div>
-        <div>
-          <label for="rl-hook">Hook Style</label>
-          <select id="rl-hook">
-            <option value="shocking statement">Shocking Statement</option>
-            <option value="question">Question</option>
-            <option value="story" selected>Story</option>
-            <option value="controversial opinion">Controversial Opinion</option>
-          </select>
-        </div>
+        <div class="output-placeholder" id="placeholder">Your AI-generated content will appear here. Pick a tool above and fill in the details.</div>
+        <div class="output-md" id="outputText" style="display:none"></div>
+      </div>
+      <div class="feedback-row" id="feedbackRow" style="display:none">
+        <span class="feedback-label">Was this helpful?</span>
+        <button class="feedback-btn" onclick="giveFeedback(this,'👍')">👍</button>
+        <button class="feedback-btn" onclick="giveFeedback(this,'👎')">👎</button>
       </div>
     </div>
 
-    <!-- SMART FIELDS: Title Generator -->
-    <div class="smart-fields hidden" id="fields-title">
-      <div class="form-divider">Title Settings</div>
-      <div class="form-grid">
-        <div>
-          <label for="tl-topic">Video Topic</label>
-          <input type="text" id="tl-topic" placeholder="e.g. I tried every biryani in Kozhikode" />
-        </div>
-        <div>
-          <label for="tl-count">Number of Titles</label>
-          <select id="tl-count">
-            <option value="5">5 titles</option>
-            <option value="10" selected>10 titles</option>
-            <option value="15">15 titles</option>
-          </select>
-        </div>
+    <div class="history-section" id="historySection" style="display:none">
+      <div class="history-header">
+        <div class="history-title">🕐 Recent Generations</div>
+        <button class="history-clear" onclick="clearHistory()">Clear all</button>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+
+  </div><!-- end toolsSection -->
+
+  <!-- ===== TRENDS SECTION ===== -->
+  <div id="trendsSection">
+
+    <div class="insight-banner" id="insightBanner" style="display:none">
+      <span class="insight-icon">🔥</span>
+      <p id="insightText">Loading this week's insight...</p>
+    </div>
+
+    <div class="trends-meta" id="trendsMeta" style="display:none">
+      <div class="trends-meta-card">
+        <h4>Trending Categories</h4>
+        <div class="tag-list" id="categoriesList"></div>
+      </div>
+      <div class="trends-meta-card">
+        <h4>Hook Patterns Working Now</h4>
+        <div class="tag-list" id="patternsList"></div>
       </div>
     </div>
 
-    <!-- SMART FIELDS: Caption + Tags -->
-    <div class="smart-fields hidden" id="fields-caption">
-      <div class="form-divider">Caption Settings</div>
-      <div class="form-grid">
-        <div>
-          <label for="cp-topic">Post / Video Description</label>
-          <input type="text" id="cp-topic" placeholder="e.g. Trip to Munnar waterfalls reel" />
-        </div>
-        <div>
-          <label for="cp-style">Caption Style</label>
-          <select id="cp-style">
-            <option value="engaging and conversational" selected>Engaging & Conversational</option>
-            <option value="funny and witty">Funny & Witty</option>
-            <option value="inspirational">Inspirational</option>
-            <option value="informative">Informative</option>
-          </select>
-        </div>
+    <div class="trends-updated" id="trendsUpdated" style="display:none">Updated <span id="updatedTime"></span></div>
+    <div class="trends-header" id="trendsGridHeader" style="display:none">Top Malayalam Videos This Week</div>
+
+    <div id="trendsSkeleton">
+      <div class="trends-skeleton">
+        <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line shorter"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line shorter"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line shorter"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line shorter"></div></div></div>
       </div>
     </div>
 
-    <!-- SMART FIELDS: Content Ideas -->
-    <div class="smart-fields hidden" id="fields-ideas">
-      <div class="form-divider">Channel Details</div>
-      <div class="form-grid">
-        <div>
-          <label for="id-subs">Subscriber Count</label>
-          <select id="id-subs">
-            <option value="new (under 1K subscribers)">New (under 1K)</option>
-            <option value="growing (1K-10K subscribers)" selected>Growing (1K-10K)</option>
-            <option value="established (10K-100K subscribers)">Established (10K-100K)</option>
-            <option value="large (100K+ subscribers)">Large (100K+)</option>
-          </select>
-        </div>
-        <div>
-          <label for="id-audience">Target Audience</label>
-          <input type="text" id="id-audience" placeholder="e.g. 18-30 year olds in Kerala" />
-        </div>
-      </div>
-      <div class="form-row">
-        <label for="id-extra">Any specific theme or upcoming event?</label>
-        <input type="text" id="id-extra" placeholder="e.g. Onam season, want to try trending formats" />
-      </div>
+    <div id="trendsError" style="display:none">
+      <div class="trends-error">⚠️ Couldn't load trends right now.<br><button onclick="loadTrends()">Try Again</button></div>
     </div>
 
-    <!-- SMART FIELDS: Content Calendar -->
-    <div class="smart-fields hidden" id="fields-calendar">
-      <div class="form-divider">Calendar Settings</div>
-      <div class="form-grid-3">
-        <div>
-          <label for="cal-freq">Posting Frequency</label>
-          <select id="cal-freq">
-            <option value="1 video per week">1x per week</option>
-            <option value="2 videos per week">2x per week</option>
-            <option value="3 videos per week" selected>3x per week</option>
-            <option value="daily">Daily</option>
-          </select>
-        </div>
-        <div>
-          <label for="cal-platform">Platform</label>
-          <select id="cal-platform">
-            <option value="YouTube only">YouTube only</option>
-            <option value="Instagram only">Instagram only</option>
-            <option value="YouTube + Instagram" selected>YouTube + Instagram</option>
-            <option value="YouTube + Instagram + Facebook">All platforms</option>
-          </select>
-        </div>
-        <div>
-          <label for="cal-month">Month / Season</label>
-          <input type="text" id="cal-month" placeholder="e.g. June 2026, Onam season" />
-        </div>
-      </div>
-    </div>
+    <div class="trends-grid" id="trendsGrid"></div>
 
-    <button class="gen-btn" id="genBtn" onclick="generate()">✦ Generate Content</button>
-  </div>
-
-  <!-- OUTPUT -->
-  <div class="output-card">
-    <div class="output-topbar">
-      <div class="output-label">✦ AI OUTPUT</div>
-      <div class="output-actions" id="outputActions" style="display:none">
-        <button class="action-btn" id="copyBtn" onclick="copyOutput()">📋 Copy</button>
-        <button class="action-btn pdf" onclick="downloadPDF()">⬇ PDF</button>
-        <a class="action-btn whatsapp" id="waBtn" href="#" target="_blank">💬 WhatsApp</a>
-      </div>
-    </div>
-    <div class="output-body">
-      <div class="loader" id="loaderEl" style="display:none">
-        <div class="loader-dots"><span></span><span></span><span></span></div>
-        <span class="loader-text" id="loaderText">Writing your content...</span>
-      </div>
-      <div class="output-placeholder" id="placeholder">Your AI-generated content will appear here. Pick a tool above and fill in the details.</div>
-      <div class="output-md" id="outputText" style="display:none"></div>
-    </div>
-    <div class="feedback-row" id="feedbackRow" style="display:none">
-      <span class="feedback-label">Was this helpful?</span>
-      <button class="feedback-btn" onclick="giveFeedback(this,'👍')">👍</button>
-      <button class="feedback-btn" onclick="giveFeedback(this,'👎')">👎</button>
-    </div>
-  </div>
-
-  <!-- HISTORY -->
-  <div class="history-section" id="historySection" style="display:none">
-    <div class="history-header">
-      <div class="history-title">🕐 Recent Generations</div>
-      <button class="history-clear" onclick="clearHistory()">Clear all</button>
-    </div>
-    <div class="history-list" id="historyList"></div>
-  </div>
+  </div><!-- end trendsSection -->
 
 </div>
 
@@ -557,9 +539,7 @@ footer strong { color: var(--red); font-family: 'Syne', sans-serif; }
 // ============================================
 // CHANNEL NAME
 // ============================================
-function getChannelName() {
-  return localStorage.getItem('vs_channel_name') || '';
-}
+function getChannelName() { return localStorage.getItem('vs_channel_name') || ''; }
 function saveChannelName() {
   const val = document.getElementById('channelNameInput').value.trim();
   if (!val) return;
@@ -570,299 +550,58 @@ function saveChannelName() {
 }
 function onLangChange() {
   const val = document.getElementById('langSelect').value;
-  const note = document.getElementById('manglishNote');
-  note.classList.toggle('visible', val === 'Manglish');
+  document.getElementById('manglishNote').classList.toggle('visible', val === 'Manglish');
 }
 
 // ============================================
-// TOOL CONFIG — niche-aware prompts
+// TOOL CONFIG
 // ============================================
 const toolEmojis = { script:'🎬', hook:'🎣', reel:'📱', title:'🔥', caption:'✍️', ideas:'💡', calendar:'📅' };
-const toolLoaders = {
-  script: 'Writing your video script...',
-  hook: 'Writing powerful hooks...',
-  reel: 'Writing your reel script...',
-  title: 'Generating viral titles...',
-  caption: 'Writing caption and hashtags...',
-  ideas: 'Generating content ideas...',
-  calendar: 'Building your 4-week content calendar...'
-};
+const toolLoaders = { script:'Writing your video script...', hook:'Writing powerful hooks...', reel:'Writing your reel script...', title:'Generating viral titles...', caption:'Writing caption and hashtags...', ideas:'Generating content ideas...', calendar:'Building your 4-week content calendar...' };
 
 function buildPrompt(tool, lang, niche) {
   const ch = getChannelName() || 'my channel';
   const manglishNote = lang === 'Manglish' ? 'IMPORTANT: Write in Manglish — Malayalam words written in English script, the way Kerala creators actually type and talk in comments and WhatsApp. Example: "Ningalku ariyamo?" not "നിങ്ങൾക്ക് അറിയാമോ?"' : '';
-
   switch(tool) {
     case 'script': {
       const topic = document.getElementById('sc-topic').value || 'a Kerala topic';
       const duration = document.getElementById('sc-duration').value;
       const tone = document.getElementById('sc-tone').value;
       const extra = document.getElementById('sc-extra').value;
-      return `You are VlogSource AI, a content assistant for Kerala YouTube creators. Write a complete ${duration} YouTube video script in ${lang} for "${ch}", a ${niche} channel with a ${tone} style.
-
-Topic: ${topic}
-${extra ? 'Key points to cover: ' + extra : ''}
-${manglishNote}
-
-Format the script using markdown:
-
-# ${topic} — Video Script
-**Channel:** ${ch} | **Duration:** ${duration} | **Tone:** ${tone}
-
----
-
-## 🎬 HOOK (First 30 seconds)
-*(Make it impossible to click away)*
-[Script here]
-
-## 🙏 INTRO
-[Script here — introduce yourself and what this video is about]
-
-## 📍 MAIN CONTENT
-
-### Section 1 — [Title]
-[Script] > *[B-ROLL SUGGESTION: ...]*
-
-### Section 2 — [Title]
-[Script] > *[B-ROLL SUGGESTION: ...]*
-
-### Section 3 — [Title]
-[Script] > *[B-ROLL SUGGESTION: ...]*
-
-## 🔔 OUTRO & CTA
-[Script — ask to like, subscribe, comment a specific question]
-
----
-**Estimated Duration:** ${duration}
-
-Write in natural ${lang} like a real Kerala creator speaks — not translated, authentic. Use Kerala-specific references, places, and culture relevant to ${niche}.`;
+      return `You are VlogSource AI, a content assistant for Kerala YouTube creators. Write a complete ${duration} YouTube video script in ${lang} for "${ch}", a ${niche} channel with a ${tone} style.\n\nTopic: ${topic}\n${extra ? 'Key points to cover: ' + extra : ''}\n${manglishNote}\n\nFormat the script using markdown:\n\n# ${topic} — Video Script\n**Channel:** ${ch} | **Duration:** ${duration} | **Tone:** ${tone}\n\n---\n\n## 🎬 HOOK (First 30 seconds)\n*(Make it impossible to click away)*\n[Script here]\n\n## 🙏 INTRO\n[Script here — introduce yourself and what this video is about]\n\n## 📍 MAIN CONTENT\n\n### Section 1 — [Title]\n[Script] > *[B-ROLL SUGGESTION: ...]*\n\n### Section 2 — [Title]\n[Script] > *[B-ROLL SUGGESTION: ...]*\n\n### Section 3 — [Title]\n[Script] > *[B-ROLL SUGGESTION: ...]*\n\n## 🔔 OUTRO & CTA\n[Script — ask to like, subscribe, comment a specific question]\n\n---\n**Estimated Duration:** ${duration}\n\nWrite in natural ${lang} like a real Kerala creator speaks — not translated, authentic.`;
     }
-
     case 'hook': {
       const topic = document.getElementById('hk-topic').value || 'a video topic';
       const count = document.getElementById('hk-count').value;
-      return `You are VlogSource AI for Kerala YouTube creators. Write ${count} powerful video hooks in ${lang} for "${ch}", a ${niche} channel.
-
-Video topic: ${topic}
-${manglishNote}
-
-Format using markdown:
-
-# Hook Options — ${topic}
-
----
-
-## Hook 1 — 😱 Shocking Statement
-[30-second hook script]
-
-## Hook 2 — ❓ Question Hook
-[30-second hook script]
-
-## Hook 3 — 📖 Story Hook
-[30-second hook script]
-
-## Hook 4 — 🎯 Promise Hook
-[30-second hook script]
-
-## Hook 5 — 🔥 Controversy Hook
-[30-second hook script]
-
----
-> **Pro tip:** Test 2-3 of these as YouTube Shorts to see which performs best before using in your main video.
-
-Write in natural ${lang} authentic to Kerala ${niche} audience.`;
+      return `You are VlogSource AI for Kerala YouTube creators. Write ${count} powerful video hooks in ${lang} for "${ch}", a ${niche} channel.\n\nVideo topic: ${topic}\n${manglishNote}\n\nFormat using markdown:\n\n# Hook Options — ${topic}\n\n---\n\n## Hook 1 — 😱 Shocking Statement\n[30-second hook script]\n\n## Hook 2 — ❓ Question Hook\n[30-second hook script]\n\n## Hook 3 — 📖 Story Hook\n[30-second hook script]\n\n## Hook 4 — 🎯 Promise Hook\n[30-second hook script]\n\n## Hook 5 — 🔥 Controversy Hook\n[30-second hook script]\n\n---\n> **Pro tip:** Test 2-3 of these as YouTube Shorts to see which performs best.`;
     }
-
     case 'reel': {
       const topic = document.getElementById('rl-topic').value || 'a reel topic';
       const duration = document.getElementById('rl-duration').value;
       const hookStyle = document.getElementById('rl-hook').value;
-      return `You are VlogSource AI for Kerala creators. Write a punchy ${duration} Instagram/YouTube Reel script in ${lang} for "${ch}", a ${niche} creator.
-
-Topic: ${topic}
-Hook style: ${hookStyle}
-${manglishNote}
-
-Format using markdown:
-
-# Reel Script — ${topic}
-**Duration:** ${duration} | **Hook:** ${hookStyle}
-
----
-
-## ⚡ HOOK (First 3 seconds — stop the scroll)
-[Hook line] > *[VISUAL: ...]*
-
-## 📌 MAIN CONTENT
-*(One point per 5-8 seconds)*
-
-**Point 1:** [Script] > *[VISUAL: ...]*
-**Point 2:** [Script] > *[VISUAL: ...]*
-**Point 3:** [Script] > *[VISUAL: ...]*
-
-## 🎯 CTA (End strong)
-[Call to action] > *[VISUAL: ...]*
-
----
-**Estimated runtime:** ${duration}
-**Suggested on-screen text:** [Key phrase to show as text overlay]
-
-Write in high-energy ${lang} for Kerala ${niche} audience.`;
+      return `You are VlogSource AI for Kerala creators. Write a punchy ${duration} Instagram/YouTube Reel script in ${lang} for "${ch}", a ${niche} creator.\n\nTopic: ${topic}\nHook style: ${hookStyle}\n${manglishNote}\n\nFormat using markdown:\n\n# Reel Script — ${topic}\n**Duration:** ${duration} | **Hook:** ${hookStyle}\n\n---\n\n## ⚡ HOOK (First 3 seconds)\n[Hook line] > *[VISUAL: ...]*\n\n## 📌 MAIN CONTENT\n**Point 1:** [Script] > *[VISUAL: ...]*\n**Point 2:** [Script] > *[VISUAL: ...]*\n**Point 3:** [Script] > *[VISUAL: ...]*\n\n## 🎯 CTA\n[Call to action] > *[VISUAL: ...]*\n\n---\n**Estimated runtime:** ${duration}`;
     }
-
     case 'title': {
       const topic = document.getElementById('tl-topic').value || 'a video topic';
       const count = document.getElementById('tl-count').value;
-      return `You are VlogSource AI for Kerala YouTube creators. Generate ${count} viral YouTube video titles in ${lang} for "${ch}", a ${niche} channel.
-
-Video topic: ${topic}
-${manglishNote}
-
-Format using markdown:
-
-# YouTube Title Options — ${topic}
-
-## 😮 Curiosity Gap Titles
-1. [Title]
-2. [Title]
-
-## 🔢 Number / List Titles
-3. [Title]
-4. [Title]
-
-## 😱 Emotional / Shocking Titles
-5. [Title]
-6. [Title]
-
-## ❓ Question Titles
-7. [Title]
-8. [Title]
-
-## 🏆 Challenge / Story Titles
-9. [Title]
-10. [Title]
-
----
-> **Best pick for Kerala audience:** Title #[number] — because [one line reason]
-> **Best for SEO:** Title #[number]
-
-Keep all titles under 60 characters. Optimise for Kerala/${lang} audience clicks.`;
+      return `You are VlogSource AI for Kerala YouTube creators. Generate ${count} viral YouTube video titles in ${lang} for "${ch}", a ${niche} channel.\n\nVideo topic: ${topic}\n${manglishNote}\n\nFormat using markdown:\n\n# YouTube Title Options — ${topic}\n\n## 😮 Curiosity Gap Titles\n1. [Title]\n2. [Title]\n\n## 🔢 Number / List Titles\n3. [Title]\n4. [Title]\n\n## 😱 Emotional / Shocking Titles\n5. [Title]\n6. [Title]\n\n## ❓ Question Titles\n7. [Title]\n8. [Title]\n\n## 🏆 Challenge / Story Titles\n9. [Title]\n10. [Title]\n\n---\n> **Best pick for Kerala audience:** Title #[number] — because [one line reason]`;
     }
-
     case 'caption': {
       const topic = document.getElementById('cp-topic').value || 'a post';
       const style = document.getElementById('cp-style').value;
-      return `You are VlogSource AI for Kerala Instagram creators. Write a ${style} Instagram caption in ${lang} for "${ch}", a ${niche} creator.
-
-Post description: ${topic}
-${manglishNote}
-
-Format using markdown:
-
-# Instagram Caption — ${topic}
-
-## ✍️ Caption
-[3-4 line caption — ${style} tone]
-
-[Blank line]
-[Call to action — ask a question or direct action]
-
-## #️⃣ Hashtags
-\`\`\`
-[30 hashtags — mix of Malayalam community tags, Kerala location tags, niche tags, and trending tags]
-\`\`\`
-
----
-**Best posting time for Kerala audience:** [Suggest day + time]
-**Story idea to pair with this post:** [One line suggestion]
-
-Write caption in natural ${lang} that feels authentic.`;
+      return `You are VlogSource AI for Kerala Instagram creators. Write a ${style} Instagram caption in ${lang} for "${ch}", a ${niche} creator.\n\nPost description: ${topic}\n${manglishNote}\n\nFormat using markdown:\n\n# Instagram Caption — ${topic}\n\n## ✍️ Caption\n[3-4 line caption]\n\n[Call to action]\n\n## #️⃣ Hashtags\n\`\`\`\n[30 hashtags]\n\`\`\`\n\n---\n**Best posting time for Kerala audience:** [Suggest day + time]`;
     }
-
     case 'ideas': {
       const subs = document.getElementById('id-subs').value;
       const audience = document.getElementById('id-audience').value || 'general Kerala audience';
       const extra = document.getElementById('id-extra').value;
-      return `You are VlogSource AI for Kerala content creators. Generate 10 unique video content ideas in ${lang} for "${ch}", a ${niche} channel.
-
-Channel size: ${subs}
-Target audience: ${audience}
-${extra ? 'Special focus: ' + extra : ''}
-${manglishNote}
-
-Format using markdown:
-
-# 10 Content Ideas for ${ch}
-
-| # | Title | Concept | Why It'll Perform |
-|---|-------|---------|-------------------|
-| 1 | [Title] | [One line] | [One line reason] |
-| 2 | ... | ... | ... |
-
----
-
-## 🔥 Top 3 to Make First
-1. **[Title]** — [Why this one now]
-2. **[Title]** — [Why this one now]
-3. **[Title]** — [Why this one now]
-
-## 📈 Evergreen Ideas (always relevant)
-- [Idea]
-- [Idea]
-
-## ⚡ Trending Right Now (make this week)
-- [Idea]
-- [Idea]
-
-All ideas specific to Kerala culture, ${niche}, and your audience. Mix YouTube videos, Shorts, and Reels.`;
+      return `You are VlogSource AI for Kerala content creators. Generate 10 unique video content ideas in ${lang} for "${ch}", a ${niche} channel.\n\nChannel size: ${subs}\nTarget audience: ${audience}\n${extra ? 'Special focus: ' + extra : ''}\n${manglishNote}\n\nFormat using markdown:\n\n# 10 Content Ideas for ${ch}\n\n| # | Title | Concept | Why It'll Perform |\n|---|-------|---------|-------------------|\n| 1 | [Title] | [One line] | [One line reason] |\n\n---\n\n## 🔥 Top 3 to Make First\n1. **[Title]** — [Why now]\n2. **[Title]** — [Why now]\n3. **[Title]** — [Why now]\n\n## 📈 Evergreen Ideas\n- [Idea]\n\n## ⚡ Trending Right Now\n- [Idea]`;
     }
-
     case 'calendar': {
       const freq = document.getElementById('cal-freq').value;
       const platform = document.getElementById('cal-platform').value;
       const month = document.getElementById('cal-month').value || 'this month';
-      return `You are VlogSource AI for Kerala content creators. Create a detailed 4-week content calendar in ${lang} for "${ch}", a ${niche} creator.
-
-Posting frequency: ${freq}
-Platforms: ${platform}
-Month/Season: ${month}
-${manglishNote}
-
-Format using markdown:
-
-# 4-Week Content Calendar — ${ch}
-**Month:** ${month} | **Frequency:** ${freq} | **Platform:** ${platform}
-
----
-
-## Week 1
-
-| Day | Content Type | Topic | Platform | Best Time |
-|-----|-------------|-------|----------|-----------|
-| Monday | [Type] | [Topic] | [Platform] | [Time] |
-| Wednesday | [Type] | [Topic] | [Platform] | [Time] |
-| Friday | [Type] | [Topic] | [Platform] | [Time] |
-
-## Week 2
-[Same table format]
-
-## Week 3
-[Same table format]
-
-## Week 4
-[Same table format]
-
----
-
-## 📊 Monthly Strategy
-
-**Best days for Kerala audience engagement:** [Days]
-**Trending Kerala topics this month:** [List]
-**One collab idea:** [Suggestion]
-**One viral challenge to try:** [Suggestion]
-**Kerala festival/event to leverage:** [If any in ${month}]
-
-Make all topics specific to Kerala culture and ${niche}.`;
+      return `You are VlogSource AI for Kerala content creators. Create a detailed 4-week content calendar in ${lang} for "${ch}", a ${niche} creator.\n\nPosting frequency: ${freq}\nPlatforms: ${platform}\nMonth/Season: ${month}\n${manglishNote}\n\nFormat using markdown:\n\n# 4-Week Content Calendar — ${ch}\n**Month:** ${month} | **Frequency:** ${freq} | **Platform:** ${platform}\n\n---\n\n## Week 1\n\n| Day | Content Type | Topic | Platform | Best Time |\n|-----|-------------|-------|----------|-----------|\n| Monday | [Type] | [Topic] | [Platform] | [Time] |\n\n## Week 2\n[Same format]\n\n## Week 3\n[Same format]\n\n## Week 4\n[Same format]\n\n---\n\n## 📊 Monthly Strategy\n**Best days for Kerala audience:** [Days]\n**Trending Kerala topics this month:** [List]\n**One collab idea:** [Suggestion]\n**Kerala festival/event to leverage:** [If any]`;
     }
   }
 }
@@ -898,11 +637,9 @@ function resetOutput() {
 // ============================================
 async function generate() {
   if (!checkPaywall()) return;
-
   const lang = document.getElementById('langSelect').value;
   const niche = document.getElementById('nicheSelect').value;
   const fullPrompt = buildPrompt(currentTool, lang, niche);
-
   document.getElementById('genBtn').disabled = true;
   document.getElementById('placeholder').style.display = 'none';
   document.getElementById('outputText').style.display = 'none';
@@ -910,44 +647,29 @@ async function generate() {
   document.getElementById('feedbackRow').style.display = 'none';
   document.getElementById('loaderText').textContent = toolLoaders[currentTool];
   document.getElementById('loaderEl').style.display = 'flex';
-
   try {
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fullPrompt })
-    });
-
+    const res = await fetch('/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fullPrompt }) });
     const data = await res.json();
     if (data.error) throw new Error(data.error.message || data.error);
-
     const text = data.text || 'No output received.';
     currentRawText = text;
-
     document.getElementById('loaderEl').style.display = 'none';
     document.getElementById('outputText').innerHTML = marked.parse(text);
     document.getElementById('outputText').style.display = 'block';
     document.getElementById('outputActions').style.display = 'flex';
     document.getElementById('feedbackRow').style.display = 'flex';
-
-    const waText = encodeURIComponent(text.slice(0, 1000) + (text.length > 1000 ? '\n\n— VlogSource AI (vlogsource.vercel.app)' : ''));
+    const waText = encodeURIComponent(text.slice(0, 1000) + (text.length > 1000 ? '\n\n— VlogSource AI' : ''));
     document.getElementById('waBtn').href = `https://wa.me/?text=${waText}`;
-
     saveToHistory(currentTool, lang, niche, text);
     renderHistory();
-
   } catch (e) {
     document.getElementById('loaderEl').style.display = 'none';
     document.getElementById('outputText').innerHTML = `<p style="color:red">Error: ${e.message}</p>`;
     document.getElementById('outputText').style.display = 'block';
   }
-
   document.getElementById('genBtn').disabled = false;
 }
 
-// ============================================
-// COPY
-// ============================================
 function copyOutput() {
   navigator.clipboard.writeText(currentRawText).then(() => {
     const btn = document.getElementById('copyBtn');
@@ -956,48 +678,18 @@ function copyOutput() {
   });
 }
 
-// ============================================
-// PDF DOWNLOAD
-// ============================================
 function downloadPDF() {
   const lang = document.getElementById('langSelect').value;
   const niche = document.getElementById('nicheSelect').value;
   const ch = getChannelName() || 'VlogSource';
   const now = new Date().toLocaleDateString('en-IN');
-
   const pdfEl = document.getElementById('pdfContent');
-  pdfEl.innerHTML = `
-    <div class="pdf-header">
-      <div>
-        <div class="pdf-brand">🎬 VlogSource</div>
-        <div style="font-size:11px;color:#888;margin-top:4px">Vectrasource Digital Suite</div>
-      </div>
-      <div class="pdf-meta">
-        <div>${ch}</div>
-        <div>Language: ${lang} | Niche: ${niche}</div>
-        <div>Generated: ${now}</div>
-      </div>
-    </div>
-    ${marked.parse(currentRawText)}
-  `;
-
-  const opt = {
-    margin: [15, 15, 15, 15],
-    filename: `VlogSource_${currentTool}_${ch.replace(/\s+/g,'-')}_${now.replace(/\//g,'-')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-
+  pdfEl.innerHTML = `<div class="pdf-header"><div><div class="pdf-brand">🎬 VlogSource</div><div style="font-size:11px;color:#888;margin-top:4px">Vectrasource Digital Suite</div></div><div class="pdf-meta"><div>${ch}</div><div>Language: ${lang} | Niche: ${niche}</div><div>Generated: ${now}</div></div></div>${marked.parse(currentRawText)}`;
+  const opt = { margin:[15,15,15,15], filename:`VlogSource_${currentTool}_${ch.replace(/\s+/g,'-')}_${now.replace(/\//g,'-')}.pdf`, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} };
   pdfEl.style.display = 'block';
-  html2pdf().set(opt).from(pdfEl).save().then(() => {
-    pdfEl.style.display = 'none';
-  });
+  html2pdf().set(opt).from(pdfEl).save().then(() => { pdfEl.style.display = 'none'; });
 }
 
-// ============================================
-// FEEDBACK
-// ============================================
 function giveFeedback(btn, type) {
   document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -1007,19 +699,13 @@ function giveFeedback(btn, type) {
 // HISTORY
 // ============================================
 const HISTORY_KEY = 'vlogsource_history';
-
 function saveToHistory(tool, lang, niche, text) {
   let history = getHistory();
   history.unshift({ tool, lang, niche, text, time: Date.now() });
   history = history.slice(0, 5);
   localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 }
-
-function getHistory() {
-  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
-  catch { return []; }
-}
-
+function getHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; } }
 function renderHistory() {
   const history = getHistory();
   const section = document.getElementById('historySection');
@@ -1028,24 +714,11 @@ function renderHistory() {
   section.style.display = 'block';
   list.innerHTML = history.map((item, i) => {
     const timeStr = new Date(item.time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-    return `
-      <div class="history-item" onclick="loadFromHistory(${i})">
-        <div class="history-item-left">
-          <div class="history-item-emoji">${toolEmojis[item.tool] || '📄'}</div>
-          <div class="history-item-info">
-            <div class="history-item-title">${item.tool.charAt(0).toUpperCase() + item.tool.slice(1)} · ${item.lang}</div>
-            <div class="history-item-meta">${item.niche} · ${timeStr}</div>
-          </div>
-        </div>
-        <div class="history-item-arrow">→</div>
-      </div>
-    `;
+    return `<div class="history-item" onclick="loadFromHistory(${i})"><div class="history-item-left"><div class="history-item-emoji">${toolEmojis[item.tool]||'📄'}</div><div class="history-item-info"><div class="history-item-title">${item.tool.charAt(0).toUpperCase()+item.tool.slice(1)} · ${item.lang}</div><div class="history-item-meta">${item.niche} · ${timeStr}</div></div></div><div class="history-item-arrow">→</div></div>`;
   }).join('');
 }
-
 function loadFromHistory(index) {
-  const history = getHistory();
-  const item = history[index];
+  const item = getHistory()[index];
   if (!item) return;
   currentRawText = item.text;
   document.getElementById('placeholder').style.display = 'none';
@@ -1053,18 +726,91 @@ function loadFromHistory(index) {
   document.getElementById('outputText').style.display = 'block';
   document.getElementById('outputActions').style.display = 'flex';
   document.getElementById('feedbackRow').style.display = 'flex';
-  const waText = encodeURIComponent(item.text.slice(0, 1000));
-  document.getElementById('waBtn').href = `https://wa.me/?text=${waText}`;
+  document.getElementById('waBtn').href = `https://wa.me/?text=${encodeURIComponent(item.text.slice(0,1000))}`;
   window.scrollTo({ top: document.querySelector('.output-card').offsetTop - 80, behavior: 'smooth' });
 }
+function clearHistory() { localStorage.removeItem(HISTORY_KEY); renderHistory(); }
 
-function clearHistory() {
-  localStorage.removeItem(HISTORY_KEY);
-  renderHistory();
+// ============================================
+// MODE SWITCHER
+// ============================================
+let trendsLoaded = false;
+function switchMode(mode) {
+  const toolsSection = document.getElementById('toolsSection');
+  const trendsSection = document.getElementById('trendsSection');
+  document.getElementById('tabTools').classList.toggle('active', mode === 'tools');
+  document.getElementById('tabTrends').classList.toggle('active', mode === 'trends');
+  toolsSection.style.display = mode === 'tools' ? 'block' : 'none';
+  trendsSection.style.display = mode === 'trends' ? 'block' : 'none';
+  if (mode === 'trends' && !trendsLoaded) loadTrends();
 }
 
 // ============================================
-// PAYWALL — fixed: check before increment
+// TRENDS
+// ============================================
+async function loadTrends() {
+  trendsLoaded = true;
+  document.getElementById('trendsSkeleton').style.display = 'block';
+  document.getElementById('trendsError').style.display = 'none';
+  document.getElementById('trendsGrid').innerHTML = '';
+  document.getElementById('insightBanner').style.display = 'none';
+  document.getElementById('trendsMeta').style.display = 'none';
+  document.getElementById('trendsUpdated').style.display = 'none';
+  document.getElementById('trendsGridHeader').style.display = 'none';
+  try {
+    const res = await fetch('/api/trends');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    document.getElementById('trendsSkeleton').style.display = 'none';
+    document.getElementById('insightText').textContent = data.insight || 'Malayalam creators are growing fast this week.';
+    document.getElementById('insightBanner').style.display = 'flex';
+    document.getElementById('categoriesList').innerHTML = (data.categories||[]).map(c=>`<span class="tag">${c}</span>`).join('');
+    document.getElementById('patternsList').innerHTML = (data.patterns||[]).map(p=>`<span class="tag pattern">${p}</span>`).join('');
+    document.getElementById('trendsMeta').style.display = 'grid';
+    if (data.updatedAt) {
+      document.getElementById('updatedTime').textContent = new Date(data.updatedAt).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      document.getElementById('trendsUpdated').style.display = 'flex';
+    }
+    if (data.videos && data.videos.length > 0) {
+      document.getElementById('trendsGridHeader').style.display = 'block';
+      document.getElementById('trendsGrid').innerHTML = data.videos.map(v=>`
+        <div class="trend-card">
+          <img class="trend-thumb" src="${v.thumbnail}" alt="${escHtml(v.title)}" loading="lazy"/>
+          <div class="trend-info">
+            <div class="trend-title">${escHtml(v.title)}</div>
+            <div class="trend-meta"><span class="trend-channel">${escHtml(v.channel)}</span><span class="trend-views">👁 ${v.views}</span></div>
+            <div class="trend-actions">
+              <a href="${v.url}" target="_blank" rel="noopener" class="btn-watch">▶ Watch</a>
+              <button class="btn-create" onclick="createWithTrend('${encodeURIComponent(v.title)}')">✦ Create with this</button>
+            </div>
+          </div>
+        </div>`).join('');
+    }
+  } catch(err) {
+    document.getElementById('trendsSkeleton').style.display = 'none';
+    document.getElementById('trendsError').style.display = 'block';
+  }
+}
+
+function createWithTrend(encodedTitle) {
+  const title = decodeURIComponent(encodedTitle);
+  switchMode('tools');
+  const ideasBtn = document.querySelector('[data-tool="ideas"]');
+  if (ideasBtn) selectTool(ideasBtn);
+  const input = document.getElementById('id-audience');
+  if (input) { input.value = title; }
+  document.getElementById('id-extra').value = 'Inspired by trending topic: ' + title;
+  document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+<script>
+// ============================================
+// PAYWALL — unchanged from your current version
 // ============================================
 const PAYWALL_CONFIG = {
   freeLimit: 5,
@@ -1083,7 +829,7 @@ function getRemainingTrials() { return Math.max(0, PAYWALL_CONFIG.freeLimit - ge
 function injectPaywallStyles() {
   const style = document.createElement('style');
   style.textContent = `
-    .vs-trial-bar { position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:12px 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;animation:slideUp 0.4s ease; }
+    .vs-trial-bar{position:fixed;bottom:0;left:0;right:0;z-index:999;background:#111;border-top:1px solid rgba(255,255,255,0.1);padding:12px 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;animation:slideUp 0.4s ease}
     @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
     .vs-trial-left{display:flex;align-items:center;gap:12px}
     .vs-trial-dots{display:flex;gap:5px}
@@ -1125,13 +871,7 @@ function showTrialBar() {
   bar.className = 'vs-trial-bar'; bar.id = 'vsTrialBar';
   let dots = '';
   for (let i = 0; i < PAYWALL_CONFIG.freeLimit; i++) dots += `<div class="vs-trial-dot ${i < used ? 'used' : ''}"></div>`;
-  bar.innerHTML = `
-    <div class="vs-trial-left">
-      <div class="vs-trial-dots">${dots}</div>
-      <div class="vs-trial-text"><strong>${remaining} free ${remaining === 1 ? 'generation' : 'generations'}</strong> remaining</div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center"><button onclick="showTokenInput()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap;">I have a token</button><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a></div>
-  `;
+  bar.innerHTML = `<div class="vs-trial-left"><div class="vs-trial-dots">${dots}</div><div class="vs-trial-text"><strong>${remaining} free ${remaining===1?'generation':'generations'}</strong> remaining</div></div><div style="display:flex;gap:8px;align-items:center"><button onclick="showTokenInput()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap;">I have a token</button><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a></div>`;
   document.body.appendChild(bar);
   document.body.style.paddingBottom = '60px';
 }
@@ -1140,10 +880,7 @@ function showEndedBar() {
   if (document.getElementById('vsTrialBar')) return;
   const bar = document.createElement('div');
   bar.className = 'vs-trial-bar'; bar.id = 'vsTrialBar';
-  bar.innerHTML = `
-    <div class="vs-trial-text" style="color:rgba(255,255,255,0.7)"><strong style="color:white">Free trial ended.</strong> Subscribe to continue using ${PAYWALL_CONFIG.productName}</div>
-    <div style="display:flex;gap:8px;align-items:center"><button onclick="showTokenInput()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap;">I have a token</button><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a></div>
-  `;
+  bar.innerHTML = `<div class="vs-trial-text" style="color:rgba(255,255,255,0.7)"><strong style="color:white">Free trial ended.</strong> Subscribe to continue using ${PAYWALL_CONFIG.productName}</div><div style="display:flex;gap:8px;align-items:center"><button onclick="showTokenInput()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap;">I have a token</button><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-subscribe-btn">Subscribe ₹${PAYWALL_CONFIG.price}/month →</a></div>`;
   document.body.appendChild(bar);
   document.body.style.paddingBottom = '60px';
 }
@@ -1157,56 +894,28 @@ function updateTrialBar() {
   let dots = '';
   for (let i = 0; i < PAYWALL_CONFIG.freeLimit; i++) dots += `<div class="vs-trial-dot ${i < used ? 'used' : ''}"></div>`;
   bar.querySelector('.vs-trial-dots').innerHTML = dots;
-  bar.querySelector('.vs-trial-text').innerHTML = `<strong>${remaining} free ${remaining === 1 ? 'generation' : 'generations'}</strong> remaining`;
+  bar.querySelector('.vs-trial-text').innerHTML = `<strong>${remaining} free ${remaining===1?'generation':'generations'}</strong> remaining`;
 }
 
 function showPaywallModal() {
   if (document.getElementById('vsModalOverlay')) return;
   const overlay = document.createElement('div');
   overlay.className = 'vs-modal-overlay'; overlay.id = 'vsModalOverlay';
-  overlay.innerHTML = `
-    <div class="vs-modal">
-      <span class="vs-modal-emoji">${PAYWALL_CONFIG.emoji}</span>
-      <div class="vs-modal-title">You've used all 5 free generations</div>
-      <div class="vs-modal-sub">Subscribe to ${PAYWALL_CONFIG.productName} and get unlimited content for your channel.</div>
-      <div class="vs-modal-price">
-        <div class="vs-price-amount">₹${PAYWALL_CONFIG.price}<span>/month</span></div>
-        <div class="vs-price-desc">Cancel anytime · Unlimited generations</div>
-      </div>
-      <ul class="vs-modal-features">
-        <li>Unlimited AI content generations</li>
-        <li>All 7 tools unlocked</li>
-        <li>Malayalam, Manglish & English</li>
-        <li>PDF download & WhatsApp share</li>
-        <li>Priority support</li>
-      </ul>
-      <a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-modal-cta">Subscribe Now — ₹${PAYWALL_CONFIG.price}/month</a>
-      <a href="https://rzp.io/rzp/12AHqoAX" target="_blank" style="display:block;text-align:center;font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;text-decoration:underline">Or get Suite Pro (all tools) — ₹699/month</a><button onclick="showTokenInput()" style="display:block;width:100%;margin-top:8px;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);border-radius:30px;padding:10px;font-size:13px;cursor:pointer;font-family:DM Sans,sans-serif;">I already have a token →</button><button class="vs-modal-dismiss" onclick="document.getElementById('vsModalOverlay').remove()">Maybe later</button>
-    </div>
-  `;
+  overlay.innerHTML = `<div class="vs-modal"><span class="vs-modal-emoji">${PAYWALL_CONFIG.emoji}</span><div class="vs-modal-title">You've used all 5 free generations</div><div class="vs-modal-sub">Subscribe to ${PAYWALL_CONFIG.productName} and get unlimited content for your channel.</div><div class="vs-modal-price"><div class="vs-price-amount">₹${PAYWALL_CONFIG.price}<span>/month</span></div><div class="vs-price-desc">Cancel anytime · Unlimited generations</div></div><ul class="vs-modal-features"><li>Unlimited AI content generations</li><li>All 7 tools unlocked</li><li>Malayalam, Manglish & English</li><li>PDF download & WhatsApp share</li><li>Priority support</li></ul><a href="${PAYWALL_CONFIG.paymentLink}" target="_blank" class="vs-modal-cta">Subscribe Now — ₹${PAYWALL_CONFIG.price}/month</a><a href="https://rzp.io/rzp/12AHqoAX" target="_blank" style="display:block;text-align:center;font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;text-decoration:underline">Or get Suite Pro (all tools) — ₹699/month</a><button onclick="showTokenInput()" style="display:block;width:100%;margin-top:8px;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);border-radius:30px;padding:10px;font-size:13px;cursor:pointer;font-family:DM Sans,sans-serif;">I already have a token →</button><button class="vs-modal-dismiss" onclick="document.getElementById('vsModalOverlay').remove()">Maybe later</button></div>`;
   document.body.appendChild(overlay);
 }
 
-
-// ============================================
-// REAL TOKEN-BASED PAYWALL
-// ============================================
+// TOKEN AUTH
 const AUTH_API = 'https://vectrasource-auth.vercel.app';
-
 function getToken() { return localStorage.getItem('vs_token_' + PAYWALL_CONFIG.productKey); }
 function saveToken(t) { localStorage.setItem('vs_token_' + PAYWALL_CONFIG.productKey, t); }
 function clearToken() { localStorage.removeItem('vs_token_' + PAYWALL_CONFIG.productKey); }
-
 async function verifyToken(token) {
   try {
-    const res = await fetch(AUTH_API + '/api/verify', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, product: PAYWALL_CONFIG.productKey })
-    });
+    const res = await fetch(AUTH_API + '/api/verify', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token, product: PAYWALL_CONFIG.productKey}) });
     return await res.json();
   } catch(e) { return { valid: false, error: 'Network error' }; }
 }
-
 async function checkPaywall() {
   const saved = getToken();
   if (saved) {
@@ -1219,7 +928,6 @@ async function checkPaywall() {
   if (current >= PAYWALL_CONFIG.freeLimit) { showPaywallModal(); return false; }
   incrementUsage(); updateTrialBar(); return true;
 }
-
 function showSubscribedBar(r) {
   const existing = document.getElementById('vsTrialBar');
   if (existing) existing.remove();
@@ -1230,7 +938,6 @@ function showSubscribedBar(r) {
   bar.innerHTML = `<div class="vs-trial-text"><strong style="color:#4ade80">✓ ${r.planName} Active</strong><span style="color:rgba(255,255,255,0.4);margin-left:8px;font-size:12px">Valid until ${expiry}</span></div><span style="font-size:11px;color:rgba(255,255,255,0.3)">${r.email}</span>`;
   document.body.appendChild(bar); document.body.style.paddingBottom = '60px';
 }
-
 function showTokenInput() {
   if (document.getElementById('vsTokenOverlay')) return;
   const o = document.createElement('div'); o.className = 'vs-modal-overlay'; o.id = 'vsTokenOverlay';
@@ -1238,7 +945,6 @@ function showTokenInput() {
   document.body.appendChild(o);
   setTimeout(() => document.getElementById('vsTokenInput')?.focus(), 100);
 }
-
 async function submitToken() {
   const input = document.getElementById('vsTokenInput');
   const btn = document.getElementById('vsTokenBtn');
@@ -1261,7 +967,6 @@ async function submitToken() {
     errEl.style.display='block'; btn.textContent='Verify Token'; btn.style.opacity='1';
   }
 }
-
 function showExpiredModal() {
   if (document.getElementById('vsModalOverlay')) return;
   const o = document.createElement('div'); o.className='vs-modal-overlay'; o.id='vsModalOverlay';
@@ -1269,18 +974,17 @@ function showExpiredModal() {
   document.body.appendChild(o);
 }
 
-
 document.addEventListener('DOMContentLoaded', async () => {
   injectPaywallStyles();
   renderHistory();
+  const ch = getChannelName();
+  if (ch) document.getElementById('channelNameInput').value = ch;
   const saved = getToken();
   if (saved) {
     const r = await verifyToken(saved);
-    if (r.valid) { showSubscribedBar(r); }
-    else { clearToken(); showTrialBar(); }
+    if (r.valid) { showSubscribedBar(r); } else { clearToken(); showTrialBar(); }
   } else { showTrialBar(); }
 });
-
 </script>
 </body>
 </html>
