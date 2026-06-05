@@ -10,33 +10,85 @@ export default async function handler(req, res) {
     if (!youtubeKey) return res.status(500).json({ error: { message: 'YOUTUBE_API_KEY not set.' } });
     if (!openrouterKey) return res.status(500).json({ error: { message: 'OPENROUTER_API_KEY not set.' } });
 
-    // Step 1: Fetch trending Malayalam videos from last 7 days
     const publishedAfter = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-    const searchRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?` +
-      `part=snippet&type=video` +
-      `&q=malayalam` +
-      `&regionCode=IN` +
-      `&relevanceLanguage=ml` +
-      `&order=viewCount` +
-      `&maxResults=20` +
-      `&publishedAfter=${publishedAfter}` +
-      `&key=${youtubeKey}`
+    // Run MULTIPLE searches across different creator niches
+    // This gets diverse content instead of just film/music dominating
+    const searchQueries = [
+      'malayalam vlog 2026',
+      'kerala food vlog',
+      'kerala travel vlog',
+      'malayalam tech review',
+      'kerala comedy youtube',
+      'malayalam fitness',
+      'kerala lifestyle vlog',
+      'malayalam business tips',
+    ];
+
+    // Fetch all queries in parallel
+    const searchPromises = searchQueries.map(q =>
+      fetch(
+        `https://www.googleapis.com/youtube/v3/search?` +
+        `part=snippet&type=video` +
+        `&q=${encodeURIComponent(q)}` +
+        `&regionCode=IN` +
+        `&relevanceLanguage=ml` +
+        `&order=viewCount` +
+        `&maxResults=5` +
+        `&publishedAfter=${publishedAfter}` +
+        `&key=${youtubeKey}`
+      ).then(r => r.json())
     );
 
-    const searchData = await searchRes.json();
+    const searchResults = await Promise.all(searchPromises);
 
-    if (searchData.error) {
-      return res.status(400).json({ error: { message: searchData.error.message } });
+    // Collect all unique video IDs
+    const seenIds = new Set();
+    const allItems = [];
+
+    for (const result of searchResults) {
+      if (!result.items) continue;
+      for (const item of result.items) {
+        const id = item.id?.videoId;
+        if (!id || seenIds.has(id)) continue;
+
+        // Filter out big label / film industry channels
+        const channel = item.snippet.channelTitle.toLowerCase();
+        const title = item.snippet.title.toLowerCase();
+
+        const isIndustryChannel =
+          channel.includes('sony') ||
+          channel.includes('zee') ||
+          channel.includes('asianet') ||
+          channel.includes('surya') ||
+          channel.includes('mazhavil') ||
+          channel.includes('official') ||
+          channel.includes('music') ||
+          channel.includes('records') ||
+          channel.includes('movies') ||
+          channel.includes('productions') ||
+          channel.includes('studios') ||
+          channel.includes('entertainment') ||
+          title.includes('official video') ||
+          title.includes('official audio') ||
+          title.includes('official song') ||
+          title.includes('video song') ||
+          title.includes('full movie') ||
+          title.includes('trailer');
+
+        if (isIndustryChannel) continue;
+
+        seenIds.add(id);
+        allItems.push(item);
+      }
     }
 
-    if (!searchData.items || searchData.items.length === 0) {
-      return res.status(200).json({ videos: [], categories: [], patterns: [], insight: 'No trends found this week.' });
+    if (allItems.length === 0) {
+      return res.status(200).json({ videos: [], categories: [], patterns: [], insight: 'No creator trends found this week.' });
     }
 
-    // Step 2: Get view counts via videos endpoint
-    const videoIds = searchData.items.map(i => i.id.videoId).filter(Boolean).join(',');
+    // Get stats for all collected videos
+    const videoIds = allItems.map(i => i.id.videoId).join(',');
 
     const statsRes = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?` +
@@ -44,9 +96,8 @@ export default async function handler(req, res) {
     );
     const statsData = await statsRes.json();
 
-    // Step 3: Merge video data + stats
-    const videos = searchData.items
-      .filter(item => item.id?.videoId)
+    // Merge + sort by views
+    const videos = allItems
       .map(item => {
         const stat = statsData.items?.find(s => s.id === item.id.videoId);
         const views = stat ? parseInt(stat.statistics.viewCount || 0) : 0;
@@ -61,11 +112,12 @@ export default async function handler(req, res) {
           viewsRaw: views
         };
       })
-      .sort((a, b) => b.viewsRaw - a.viewsRaw) // sort by views descending
-      .slice(0, 12); // top 12
+      .filter(v => v.viewsRaw > 500) // must have some real traction
+      .sort((a, b) => b.viewsRaw - a.viewsRaw)
+      .slice(0, 12); // show top 12
 
-    // Step 4: AI analysis via OpenRouter (same pattern as generate.js)
-    const titles = videos.map(v => v.title).join('\n');
+    // AI analysis
+    const titles = videos.slice(0, 15).map(v => v.title).join('\n');
 
     const aiRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -79,21 +131,21 @@ export default async function handler(req, res) {
         model: 'anthropic/claude-haiku-4-5',
         messages: [{
           role: 'user',
-          content: `You are an expert in Malayalam YouTube content strategy. Analyze these trending Malayalam YouTube video titles from this week and extract insights.
+          content: `You are an expert in Malayalam YouTube content strategy for independent creators (not film industry). Analyze these trending Malayalam YouTube video titles from independent creators this week.
 
 Titles:
 ${titles}
 
-Respond ONLY in valid JSON with this exact structure (no markdown, no backticks):
+Respond ONLY in valid JSON (no markdown, no backticks):
 {
   "categories": ["category1", "category2", "category3"],
   "patterns": ["pattern1", "pattern2", "pattern3"],
-  "insight": "One sentence about what Kerala YouTube viewers are most interested in this week"
+  "insight": "One punchy sentence about what independent Kerala YouTube creators are making that's working this week"
 }
 
-For categories: identify the top 3 content themes (e.g. "Food & Travel", "Tech Reviews", "Comedy").
-For patterns: identify the top 3 title/hook structures that are working (e.g. "Shocking reveal format", "First time trying X", "Best X in Kerala").
-For insight: write one punchy sentence in English about the trend.`
+For categories: top 3 content themes among independent creators (e.g. "Food Vlogs", "Tech Reviews", "Comedy Skits").
+For patterns: top 3 title/hook structures working for independent creators (e.g. "Personal challenge format", "Day in my life").
+For insight: one sentence in English, specific to independent creator trends.`
         }],
         max_tokens: 300,
         temperature: 0.3
@@ -102,9 +154,9 @@ For insight: write one punchy sentence in English about the trend.`
 
     const aiData = await aiRes.json();
 
-    let categories = ['General Content', 'Entertainment', 'Lifestyle'];
-    let patterns = ['Reaction & Review format', 'Best of Kerala series', 'Personal story format'];
-    let insight = 'Malayalam viewers are engaging heavily with authentic local content this week.';
+    let categories = ['Vlog & Lifestyle', 'Food & Travel', 'Tech Reviews'];
+    let patterns = ['Day in my life format', 'Personal challenge format', 'Best of Kerala series'];
+    let insight = 'Independent Malayalam creators are winning with authentic personal stories this week.';
 
     try {
       const aiText = aiData.choices?.[0]?.message?.content || '';
@@ -114,10 +166,9 @@ For insight: write one punchy sentence in English about the trend.`
       if (parsed.patterns) patterns = parsed.patterns;
       if (parsed.insight) insight = parsed.insight;
     } catch (e) {
-      // fallback to defaults above if AI parse fails
+      // use fallback defaults
     }
 
-    // Cache for 6 hours on Vercel edge
     res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=3600');
 
     return res.status(200).json({
