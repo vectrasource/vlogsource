@@ -1,91 +1,22 @@
-// subscribe.js
-// Drop this script into any Vectrasource product page
-// Replaces the static Razorpay payment link with a proper subscription checkout
-// Usage: call startSubscription('vlogsource') on button click
+// subscribe.js - Fixed version
+// Simply redirects to Razorpay payment links
 
-// Your Razorpay Key ID (public — safe to expose)
-const RAZORPAY_KEY = 'rzp_live_SxsAgSqIpmxqs2'; // ← replace with your actual key
-
-// Map product → Razorpay Plan ID
-// Get these from Razorpay Dashboard → Subscriptions → Plans
-const PLAN_IDS = {
-  'vlogsource': 'plan_SxrzUFchScm8fi',
-  'tutorai':    'plan_SxvgSKYt8hoGPW',
-  'vakeel':     'plan_SxvdqdKzVzNYTx',
-  'taxdraftai': 'plan_SxvfSnGF6UgYpZ',
-  'suite':      'plan_SxvxIMnI5krctx',
+const PAYMENT_LINKS = {
+  'vlogsource': 'https://rzp.io/rzp/bnXkcm8H',
+  'tutorai':    'https://rzp.io/rzp/tutorai',
+  'vakeel':     'https://rzp.io/rzp/Z5odPYeR',
+  'taxdraftai': 'https://rzp.io/rzp/taxdraftai',
+  'suite':      'https://rzp.io/rzp/aGup1zz',
 };
 
-const PLAN_AMOUNTS = {
-  'vlogsource': 26900, // ₹269 in paise
-  'tutorai':    26900,
-  'vakeel':     26900,
-  'suite':      69900, // ₹699 in paise
-};
-
-const PLAN_DISPLAY_NAMES = {
-  'vlogsource': 'VlogSource Pro',
-  'tutorai':    'TutorAI Pro',
-  'vakeel':     'Vakeel AI Pro',
-  'suite':      'Vectrasource Suite Pro',
-};
-
-async function startSubscription(product = 'vlogsource') {
-  // Load Razorpay checkout script if not already loaded
-  if (!window.Razorpay) {
-    await new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
+function startSubscription(product = 'vlogsource') {
+  const link = PAYMENT_LINKS[product];
+  if (link) {
+    window.open(link, '_blank');
   }
-
-  const planId = PLAN_IDS[product];
-  if (!planId || planId.includes('xxxxxxx')) {
-    console.error('Plan ID not configured for', product);
-    alert('Payment setup incomplete. Please contact support.');
-    return;
-  }
-
-  const options = {
-    key: RAZORPAY_KEY,
-    subscription_id: null, // will be set after creating subscription
-    name: 'Vectrasource',
-    description: PLAN_DISPLAY_NAMES[product] + ' — Monthly Subscription',
-    image: 'https://vlogsource.vercel.app/favicon.ico',
-    recurring: true,
-    // Create subscription on your backend first, then pass subscription_id
-    // For now using payment link as fallback — replace with subscription flow
-    handler: function(response) {
-      console.log('Payment success:', response);
-      showPostPaymentMessage();
-    },
-    prefill: {
-      email: '',   // pre-fill if you have the user's email
-      contact: '',
-    },
-    notes: {
-      product: product,
-    },
-    theme: {
-      color: '#FF3B3B'
-    },
-    modal: {
-      ondismiss: function() {
-        console.log('Checkout closed');
-      }
-    }
-  };
-
-  // Open Razorpay checkout
-  const rzp = new window.Razorpay(options);
-  rzp.open();
 }
 
 function showPostPaymentMessage() {
-  // Show a message telling user to check email for token
   const overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;padding:1.5rem;';
   overlay.innerHTML = `
