@@ -690,7 +690,7 @@ async function generate() {
     const text = data.text || 'No output received.';
     currentRawText = text;
     document.getElementById('loaderEl').style.display = 'none';
-    document.getElementById('outputText').innerHTML = marked.parse(text);
+    document.getElementById('outputText').innerHTML = text;
     document.getElementById('outputText').style.display = 'block';
     document.getElementById('outputActions').style.display = 'flex';
     document.getElementById('feedbackRow').style.display = 'flex';
