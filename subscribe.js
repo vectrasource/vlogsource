@@ -2,11 +2,11 @@
 // Simply redirects to Razorpay payment links
 
 const PAYMENT_LINKS = {
-  'vlogsource': 'https://rzp.io/rzp/bnXkcm8H',
-  'tutorai':    'https://rzp.io/rzp/tutorai',
-  'vakeel':     'https://rzp.io/rzp/Z5odPYeR',
-  'taxdraftai': 'https://rzp.io/rzp/taxdraftai',
-  'suite':      'https://rzp.io/rzp/aGup1zz',
+  'vlogsource': 'https://rzp.io/rzp/k0d0Yim',
+  'tutorai':    'https://rzp.io/rzp/rMus1XR',
+  'vakeel':     'https://rzp.io/rzp/k71Z0YUM',
+  'taxdraftai': 'https://rzp.io/rzp/r2WsfNMr',
+  'suite':      'https://rzp.io/rzp/6F7N1ov',
 };
 
 function startSubscription(product = 'vlogsource') {
